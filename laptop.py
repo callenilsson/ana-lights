@@ -25,7 +25,7 @@ def bytesToInt(b):
 client = socket.socket()
 #client.connect(('192.168.1.129', 44446))
 #client.connect(('192.168.1.147', 44446))
-client.connect(('192.168.1.100', 44446))
+client.connect(('192.168.0.500', 8089))
 
 mon = {'top' : 590, 'left' : 1158, 'width' : 998, 'height' : 298}
 sct = mss.mss()
