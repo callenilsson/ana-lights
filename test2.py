@@ -74,7 +74,6 @@ if __name__ == '__main__':
             data = recv_all(conn, data_size)
             data = zlib.decompress(data)
             frame = json.loads(data.decode())
-            print(frame.shape)
 
             applyNumpyColors(strip1, frame)
             applyNumpyColors(strip2, frame)
@@ -82,7 +81,8 @@ if __name__ == '__main__':
 
             conn.sendall(intToBytes(1))
 
-        except:
+        except Exception as e:
+            print(e)
             colorWipe(strip1)
             colorWipe(strip2)
             colorWipe(strip3)
