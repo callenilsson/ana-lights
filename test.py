@@ -26,17 +26,17 @@ def animate(strip, renders, start_time, interval):
         goal_time = i/60.0
         if goal_time < current_time:
             continue
-            
+
         start_iter_time = time.time()
         applyNumpyColors(strip, renders[i])
-        
+
         wait = 1/60.0 - (time.time() - start_iter_time)
         if wait > 0:
             time.sleep(wait)
-        
 
 
-        
+
+
 if __name__ == '__main__':
     # LED strip configuration:
     LED_COUNT      = 144    # Number of LED pixels.
