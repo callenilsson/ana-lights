@@ -68,14 +68,8 @@ if __name__ == '__main__':
             #frame = json.loads(data.decode())
             # Read video to numpy array
             #renders = np.zeros((22000,300,3))
-            video = skvideo.io.vread('cloudless_lights.mp4')
+            video = skvideo.io.vread('cloudless_lights.mp4')[:, :288, :10, 3]
             print(video.shape)
-            exit()
-            i = 0
-            for frame in videogen:
-                print(i)
-                renders[i] = frame[:,0,:]
-                i += 1
 
             applyNumpyColors(strip1, frame)
             applyNumpyColors(strip2, frame)
