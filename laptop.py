@@ -42,13 +42,13 @@ while True:
     client.sendall(data_size)
     client.sendall(data)
 
-    data = client.recv(4)
-    next = bytesToInt(data)
-    if not(next == 1):
-        exit()
+    #data = client.recv(4)
+    #next = bytesToInt(data)
+    #if not(next == 1):
+#        exit()
 
 
-    delta = time.time()-t
-    if delta < 1/60.0:
-        time.sleep(1/60.0 - (delta))
+    #delta = time.time()-t
+    #if delta < 1/60.0:
+#        time.sleep(1/60.0 - (delta))
     #print(int(1/(time.time()-t)), 'fps').
