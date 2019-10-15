@@ -8,6 +8,7 @@ import json
 import numpy as np
 import time
 import zlib
+import skvideo.io
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
