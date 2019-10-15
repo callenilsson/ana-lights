@@ -31,8 +31,6 @@ def intToBytes(n):
     return b
 
 def bytesToInt(b):
-    print(type(b))
-    print(b)
     n = (b[0]<<24) + (b[1]<<16) + (b[2]<<8) + b[3]
     return n
 
