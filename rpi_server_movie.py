@@ -12,7 +12,7 @@ import skvideo.io
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(int(frame[i][0][1]), int(frame[i][0][2]), int(frame[i][0][0])))
+        strip.setPixelColor(i, Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2])))
     strip.show()
 
 def colorWipe(strip):
@@ -61,24 +61,37 @@ if __name__ == '__main__':
     strip2.begin()
     strip3.begin()
 
-    print('ready')
-
+    print('Loading video...')
+    video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
+    video = video*0.2
+    video = video.astype(np.uint8)
+    fps = 60
+    
+    server = socket.socket()
+    server.bind(('192.168.0.150', 9090))
+    server.listen(1)
+    print('Ready')
+    conn, client_address = server.accept()
+    
+    conn.send('RPi 1 ready'.encode())
+    
+    recv_time = float(conn.recv(1024).decode())
+    start_time = time.time()
+    time_diff = recv_time - start_time
+    start_time = start_time - time_diff
+    
     while True:
         try:
-            #frame = json.loads(data.decode())
-            # Read video to numpy array
-            #renders = np.zeros((22000,300,3))
-            video = skvideo.io.vread('cloudless_lights.mp4')[:, :288, :10, 3]
-            print(video.shape)
-
+            t = time.time()
+            true_index = int((time.time() - start_time)*fps)
+            frame = video[true_index]
+            
             applyNumpyColors(strip1, frame)
             applyNumpyColors(strip2, frame)
             applyNumpyColors(strip3, frame)
-
-            conn.sendall(intToBytes(1))
-
-        except Exception as e:
-            print(e)
+            
+            print(int(1/(time.time() - t)), 'fps')
+        except:
             colorWipe(strip1)
             colorWipe(strip2)
             colorWipe(strip3)
