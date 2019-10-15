@@ -25,7 +25,7 @@ def bytesToInt(b):
 client = socket.socket()
 #client.connect(('192.168.1.129', 44446))
 #client.connect(('192.168.1.147', 44446))
-client.connect(('192.168.0.500', 8089))
+client.connect(('192.168.0.150', 9090))
 
 mon = {'top' : 590, 'left' : 1158, 'width' : 998, 'height' : 298}
 sct = mss.mss()
@@ -33,7 +33,8 @@ while True:
     t = time.time()
 
     img = np.asarray(sct.grab(mon))[:,:,:3]
-    img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)
+    img = cv2.resize(img, dsize=(1, 144), interpolation=cv2.INTER_NEAREST)
+    print(img.shape)
 
     data = json.dumps(img.tolist()).encode()
     data = zlib.compress(data)
