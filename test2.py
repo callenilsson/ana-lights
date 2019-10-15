@@ -41,7 +41,7 @@ def recv_all(conn, size):
         data += conn.recv(diff)
         #print('HEJ')
     return data
-    
+
 if __name__ == '__main__':
     # LED strip configuration:
     LED_COUNT      = 144      # Number of LED pixels.
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     print('ready')
 
     server = socket.socket()
-    server.bind(('192.168.1.100', 44446))
+    server.bind(('192.168.0.150', 9090))
     server.listen(1)
     conn, client_address = server.accept()
 
