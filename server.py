@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     print('Waiting for client...')
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind(('192.168.0.500', 8089))
+    serversocket.bind(('192.168.0.150', 8089))
     serversocket.listen(5)
     conn, address = serversocket.accept()
 
