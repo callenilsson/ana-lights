@@ -20,29 +20,6 @@ def colorWipe(strip):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
-def intToBytes(n):
-    b = bytearray([0, 0, 0, 0])   # init
-    b[3] = n & 0xFF
-    n >>= 8
-    b[2] = n & 0xFF
-    n >>= 8
-    b[1] = n & 0xFF
-    n >>= 8
-    b[0] = n & 0xFF
-    return b
-
-def bytesToInt(b):
-    n = (b[0]<<24) + (b[1]<<16) + (b[2]<<8) + b[3]
-    return n
-
-def recv_all(conn, size):
-    data = conn.recv(size)
-    while len(data) < size:
-        diff = size - len(data)
-        data += conn.recv(diff)
-        #print('HEJ')
-    return data
-
 if __name__ == '__main__':
     # LED strip configuration:
     LED_COUNT      = 144      # Number of LED pixels.
@@ -72,9 +49,11 @@ if __name__ == '__main__':
     server.listen(1)
     print('Ready')
     conn, client_address = server.accept()
-    
-    conn.send('RPi 1 ready'.encode())
-    
+
+    recv_song_start_time = float(conn.recv(1024).decode())
+    msg = 'RPi 1 ready to start at ' + str(recv_song_start_time)
+    conn.send(msg.encode())
+
     recv_time = float(conn.recv(1024).decode())
     start_time = time.time()
     time_diff = recv_time - start_time
@@ -83,7 +62,7 @@ if __name__ == '__main__':
     while True:
         try:
             t = time.time()
-            true_index = int((time.time() - start_time)*fps)
+            true_index = int((time.time() - start_time + recv_song_start_time)*fps)
             frame = video[true_index]
             
             applyNumpyColors(strip1, frame)
