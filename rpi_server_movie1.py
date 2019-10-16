@@ -56,8 +56,8 @@ if __name__ == '__main__':
 
     recv_time = float(conn.recv(1024).decode())
     start_time = time.time()
-    time_diff = recv_time - start_time
-    start_time = start_time - time_diff
+    #time_diff = recv_time - start_time
+    #start_time = start_time - time_diff
 
     while True:
         try:
