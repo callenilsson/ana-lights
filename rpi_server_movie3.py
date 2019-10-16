@@ -65,6 +65,7 @@ if __name__ == '__main__':
         try:
             t = time.time()
             true_index = int((time.time() - start_time + recv_song_start_time)*fps)
+            print(time.time() - start_time + recv_song_start_time, true_index)
             frame = video[true_index]
 
             applyNumpyColors(strip1, frame)
