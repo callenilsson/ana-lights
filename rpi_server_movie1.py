@@ -40,10 +40,10 @@ if __name__ == '__main__':
 
     print('Loading video...')
     video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
-    video = video*0.2
+    video = video*0.1
     video = video.astype(np.uint8)
     fps = 60
-    
+
     server = socket.socket()
     server.bind(('192.168.0.150', 9090))
     server.listen(1)
@@ -58,17 +58,17 @@ if __name__ == '__main__':
     start_time = time.time()
     time_diff = recv_time - start_time
     start_time = start_time - time_diff
-    
+
     while True:
         try:
             t = time.time()
             true_index = int((time.time() - start_time + recv_song_start_time)*fps)
             frame = video[true_index]
-            
+
             applyNumpyColors(strip1, frame)
             applyNumpyColors(strip2, frame)
             applyNumpyColors(strip3, frame)
-            
+
             print(int(1/(time.time() - t)), 'fps')
         except:
             colorWipe(strip1)

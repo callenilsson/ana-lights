@@ -9,11 +9,11 @@ def text_time_to_seconds(text_time):
     return minutes*60 + seconds + milliseconds/100.0
 
 if __name__ == "__main__":
-    #rpi1 = socket.socket()
-    #rpi2 = socket.socket()
+    rpi1 = socket.socket()
+    rpi2 = socket.socket()
     rpi3 = socket.socket()
-    #rpi1.connect(('192.168.0.150', 9090))
-    #rpi2.connect(('192.168.0.179', 9090))
+    rpi1.connect(('192.168.0.150', 9090))
+    rpi2.connect(('192.168.0.179', 9090))
     rpi3.connect(('192.168.0.197', 9090))
 
     print('Enter song or custom timecode to start from:')
@@ -33,18 +33,18 @@ if __name__ == "__main__":
         song_start = text_time_to_seconds(text_input)
 
     # Send timecode to RPi's where to start
-    #rpi1.send(str(song_start).encode())
-    #rpi2.send(str(song_start).encode())
+    rpi1.send(str(song_start).encode())
+    rpi2.send(str(song_start).encode())
     rpi3.send(str(song_start).encode())
 
     # Wait for ready responses from RPi's
-    #print(rpi1.recv(1024).decode())
-    #print(rpi2.recv(1024).decode())
+    print(rpi1.recv(1024).decode())
+    print(rpi2.recv(1024).decode())
     print(rpi3.recv(1024).decode())
 
     # Ready
     input('Press enter to start')
     start_time = time.time()
-    #rpi1.send(str(start_time).encode())
-    #rpi2.send(str(start_time).encode())
+    rpi1.send(str(start_time).encode())
+    rpi2.send(str(start_time).encode())
     rpi3.send(str(start_time).encode())

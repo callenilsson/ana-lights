@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     print('Loading video...')
     video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
-    video = video*0.2
+    video = video*0.1
     video = video.astype(np.uint8)
     fps = 60
 
