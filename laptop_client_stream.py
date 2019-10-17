@@ -23,13 +23,13 @@ def bytesToInt(b):
     return n
 
 rpi1 = socket.socket()
-rpi2 = socket.socket()
+#rpi2 = socket.socket()
 #rpi3 = socket.socket()
 rpi1.connect(('192.168.0.150', 9090))
-rpi2.connect(('192.168.0.179', 9090))
+#rpi2.connect(('192.168.0.179', 9090))
 #rpi3.connect(('192.168.0.197', 9090))
 
-mon = {'top' : 590, 'left' : 1158, 'width' : 998, 'height' : 298}
+mon = {'top' : 620, 'left' : 900, 'width' : 1000, 'height' : 288}
 sct = mss.mss()
 while True:
     t = time.time()
@@ -42,19 +42,19 @@ while True:
     data_size = intToBytes(len(data)) # 4 bytes
 
     rpi1.sendall(data_size)
-    rpi2.sendall(data_size)
+    #rpi2.sendall(data_size)
     #rpi3.sendall(data_size)
     rpi1.sendall(data)
-    rpi2.sendall(data)
+    #rpi2.sendall(data)
     #rpi3.sendall(data)
 
     data1 = rpi1.recv(4)
-    data2 = rpi2.recv(4)
+    #data2 = rpi2.recv(4)
     #data3 = rpi3.recv(4)
     next1 = bytesToInt(data1)
-    next2 = bytesToInt(data2)
+    #next2 = bytesToInt(data2)
     #next3 = bytesToInt(data3)
-    if not(next1 == 1 or next2 == 1): #or next3 == 1):
+    if not(next1 == 1):# or next2 == 1): #or next3 == 1):
         exit()
 
 

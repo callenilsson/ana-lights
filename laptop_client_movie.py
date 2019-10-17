@@ -16,7 +16,6 @@ if __name__ == "__main__":
     rpi2.connect(('192.168.0.179', 9090))
     rpi3.connect(('192.168.0.197', 9090))
 
-    print('Enter song or custom timecode to start from:')
     songs = [['Cloudless skies', '0:00:00'],
             ['Pixeldye', '1:03:52'],
             ['Lumiére', '2:20:21'],
@@ -25,7 +24,7 @@ if __name__ == "__main__":
             ["You're somewhere", '5:13:10']]
     for i in range(len(songs)):
         print(i+1, '-', songs[i][0], '(' + songs[i][1] + ')')
-    text_input = input()
+    text_input = input('Enter song or custom timecode to start from:')
     if text_input.isdigit():
         song = songs[int(text_input)-1]
         song_start = text_time_to_seconds(song[1])
