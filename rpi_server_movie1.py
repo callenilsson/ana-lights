@@ -64,14 +64,14 @@ if __name__ == '__main__':
         try:
             t = time.time()
             true_index = int((time.time() - start_time + recv_song_start_time)*fps)
-            print(time.time() - start_time + recv_song_start_time, true_index)
+            #print(time.time() - start_time + recv_song_start_time, true_index)
             frame = video[true_index]
 
             applyNumpyColors(strip1, frame)
             applyNumpyColors(strip2, frame)
             applyNumpyColors(strip3, frame)
 
-            print(int(1/(time.time() - t)), 'fps')
+            #print(int(1/(time.time() - t)), 'fps')
         except:
             colorWipe(strip1)
             colorWipe(strip2)
