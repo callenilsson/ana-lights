@@ -16,12 +16,12 @@ if __name__ == "__main__":
     rpi2.connect(('192.168.0.179', 9090))
     rpi3.connect(('192.168.0.197', 9090))
 
-    songs = [['Cloudless skies', '0:00:00'],
-            ['Pixeldye', '1:03:52'],
-            ['Lumiére', '2:20:21'],
-            ['Your name in the stars', '3:00:15'],
-            ['Regn', '4:23:15'],
-            ["You're somewhere", '5:13:10']]
+    songs = [['Cloudless skies', '0:03:69'],
+            ['Pixeldye', '4:19:52'],
+            ['Lumiére', '12:22:87'],
+            ['Your name in the stars', '19:36:21'],
+            ['Regn', '23:08:31'],
+            ["You're somewhere", '27:23:13']]
     for i in range(len(songs)):
         print(i+1, '-', songs[i][0], '(' + songs[i][1] + ')')
     text_input = input('Enter song or custom timecode to start from:')

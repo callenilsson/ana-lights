@@ -39,10 +39,11 @@ if __name__ == '__main__':
     strip3.begin()
 
     print('Loading video...')
-    video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
-    video = video*0.1
-    video = video.astype(np.uint8)
-    fps = 60
+    #video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
+    #video = video*0.1
+    #video = video.astype(np.uint8)
+    video = np.load('lights/ana_lights_gbg.npy')
+    fps = 30
 
     server = socket.socket()
     server.bind(('192.168.0.179', 9090))
