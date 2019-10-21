@@ -98,3 +98,8 @@ if __name__ == '__main__':
         elif action_recv == 'pause':
             with lock:
                 action = 'pause'
+
+        elif action_recv == 'resume':
+            with lock:
+                action = 'start'
+                barrier.wait()

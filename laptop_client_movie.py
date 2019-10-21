@@ -16,6 +16,7 @@ def start(pies):
             ['Your name in the stars', '19:36:21'],
             ['Regn', '23:08:31'],
             ["You're somewhere", '27:23:13']]
+    print('---------------')
     for i in range(len(songs)):
         print(i+1, '-', songs[i][0], '(' + songs[i][1] + ')')
     text_input = input('Enter song or custom timecode to start from: ')
@@ -38,6 +39,9 @@ def stop(pies):
 def pause(pies):
     for pi in pies: pi.send('pause'.encode())
 
+def resume(pies):
+    for pi in pies: pi.send('resume'.encode())
+
 def exitt(pies):
     for pi in pies: pi.close()
     exit()
@@ -47,19 +51,21 @@ if __name__ == "__main__":
     rpi2 = socket.socket()
     rpi3 = socket.socket()
     rpi1.connect(('192.168.0.150', 9090))
-    rpi2.connect(('192.168.0.179', 9090))
-    rpi3.connect(('192.168.0.197', 9090))
-    pies = [rpi1, rpi2, rpi3]
+    #rpi2.connect(('192.168.0.179', 9090))
+    #rpi3.connect(('192.168.0.197', 9090))
+    pies = [rpi1]#, rpi2, rpi3]
 
     while True:
         print('---------------')
         print('1 - Start')
         print('2 - Stop')
         print('3 - Pause')
-        print('4 - Exit')
-        action = input('Select an action to perform:')
+        print('4 - Resume')
+        print('5 - Exit')
+        action = input('Select an action to perform: ')
 
         if action == '1': start(pies)
         if action == '2': stop(pies)
         if action == '3': pause(pies)
-        if action == '4': exitt(pies)
+        if action == '4': resume(pies)
+        if action == '5': exitt(pies)
