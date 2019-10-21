@@ -33,7 +33,7 @@ def lights_thread(lock, barrier, strips, video):
             true_index = int((time.time() - start_time + user_start_time)*fps)
             frame = video[true_index]
             for strip in strips: applyNumpyColors(strip, frame)
-            print(int(1/(time.time() - t)), 'fps')
+            #print(int(1/(time.time() - t)), 'fps')
 
         elif get_action == 'stop':
             for strip in strips: colorWipe(strip)

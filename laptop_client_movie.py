@@ -28,7 +28,7 @@ def start(pies):
     # Send timecode to RPi's where to start
     for pi in pies: pi.send(str(song_start).encode())
     # Wait for ready responses from RPi's
-    for pi in pies: pi.recv(1024).decode()
+    for pi in pies: print(pi.recv(1024).decode())
     # Ready
     input('Press enter to start')
     for pi in pies: pi.send('go'.encode())

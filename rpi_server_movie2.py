@@ -9,6 +9,7 @@ import numpy as np
 import time
 import zlib
 import skvideo.io
+import threading
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -19,6 +20,27 @@ def colorWipe(strip):
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
+
+def lights_thread(lock, barrier, strips, video):
+    global action, start_time, user_start_time
+    barrier.wait()
+    while True:
+        with lock:
+            get_action = str(action)
+
+        if get_action == 'start':
+            t = time.time()
+            true_index = int((time.time() - start_time + user_start_time)*fps)
+            frame = video[true_index]
+            for strip in strips: applyNumpyColors(strip, frame)
+            #print(int(1/(time.time() - t)), 'fps')
+
+        elif get_action == 'stop':
+            for strip in strips: colorWipe(strip)
+            barrier.wait()
+
+        elif get_action == 'pause':
+            barrier.wait()
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -37,6 +59,7 @@ if __name__ == '__main__':
     strip1.begin()
     strip2.begin()
     strip3.begin()
+    strips = [strip1, strip2, strip3]
 
     print('Loading video...')
     #video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
@@ -46,34 +69,37 @@ if __name__ == '__main__':
     fps = 30
 
     server = socket.socket()
-    server.bind(('192.168.0.179', 9090))
+    server.bind(('0.0.0.0', 9090))
     server.listen(1)
     print('Ready')
     conn, client_address = server.accept()
 
-    recv_song_start_time = float(conn.recv(1024).decode())
-    msg = 'RPi 2 ready to start at ' + str(recv_song_start_time)
-    conn.send(msg.encode())
-
-    recv_time = float(conn.recv(1024).decode())
-    start_time = time.time()
-    #time_diff = recv_time - start_time
-    #start_time = start_time - time_diff
+    lock = threading.Lock()
+    barrier = threading.Barrier(2)
+    global action, start_time, user_start_time
+    threading.Thread(target=lights_thread, args=(lock, barrier, strips, video)).start()
 
     while True:
-        try:
-            t = time.time()
-            true_index = int((time.time() - start_time + recv_song_start_time)*fps)
-            #print(time.time() - start_time + recv_song_start_time, true_index)
-            frame = video[true_index]
+        action_recv = conn.recv(1024).decode()
+        if action_recv == 'start':
+            with lock:
+                user_start_time = float(conn.recv(1024).decode())
+                msg = 'RPi 2 ready to start at ' + str(user_start_time)
+                conn.send(msg.encode())
+                wait_to_start = conn.recv(1024).decode()
+                start_time = time.time()
+                action = 'start'
+                barrier.wait()
 
-            applyNumpyColors(strip1, frame)
-            applyNumpyColors(strip2, frame)
-            applyNumpyColors(strip3, frame)
+        elif action_recv == 'stop':
+            with lock:
+                action = 'stop'
 
-            #print(int(1/(time.time() - t)), 'fps')
-        except:
-            colorWipe(strip1)
-            colorWipe(strip2)
-            colorWipe(strip3)
-            exit()
+        elif action_recv == 'pause':
+            with lock:
+                action = 'pause'
+
+        elif action_recv == 'resume':
+            with lock:
+                action = 'start'
+                barrier.wait()
