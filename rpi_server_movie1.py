@@ -90,6 +90,7 @@ if __name__ == '__main__':
     lock = threading.Lock()
     barrier = threading.Barrier(2)
     global action, start_time, user_start_time, ending_start_time
+    action = 'stop'
     threading.Thread(target=lights_thread, args=(lock, barrier, strips, video, video_ending)).start()
 
     while True:
