@@ -29,7 +29,7 @@ rpi1.connect(('192.168.0.150', 9090))
 #rpi2.connect(('192.168.0.179', 9090))
 #rpi3.connect(('192.168.0.197', 9090))
 
-mon = {'top' : 620, 'left' : 900, 'width' : 1000, 'height' : 288}
+mon = {'top' : 620, 'left' : 1400, 'width' : 1000, 'height' : 288}
 sct = mss.mss()
 while True:
     t = time.time()
