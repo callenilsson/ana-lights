@@ -21,19 +21,23 @@ def colorWipe(strip):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
-def lights_thread(lock, barrier, strips, video):
-    global action, start_time, user_start_time
+def lights_thread(lock, barrier, strips, video, video_ending):
+    global action, start_time, user_start_time, ending_start_time
     barrier.wait()
     while True:
         with lock:
             get_action = str(action)
 
         if get_action == 'start':
-            t = time.time()
-            true_index = int((time.time() - start_time + user_start_time)*fps)
-            frame = video[true_index]
-            for strip in strips: applyNumpyColors(strip, frame)
-            #print(int(1/(time.time() - t)), 'fps')
+            try:
+                #t = time.time()
+                true_index = int((time.time() - start_time + user_start_time)*fps)
+                frame = video[true_index]
+                for strip in strips: applyNumpyColors(strip, frame)
+                #print(int(1/(time.time() - t)), 'fps')
+            except:
+                with lock:
+                    action = 'stop'
 
         elif get_action == 'stop':
             for strip in strips: colorWipe(strip)
@@ -41,6 +45,17 @@ def lights_thread(lock, barrier, strips, video):
 
         elif get_action == 'pause':
             barrier.wait()
+
+        if get_action == 'ending':
+            try:
+                #t = time.time()
+                true_index = int((time.time() - ending_start_time)*fps)
+                frame = video_ending[true_index]
+                for strip in strips: applyNumpyColors(strip, frame)
+                #print(int(1/(time.time() - t)), 'fps')
+            except:
+                with lock:
+                    action = 'stop'
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -64,10 +79,8 @@ if __name__ == '__main__':
     strips = [strip1, strip2, strip3, strip4]
 
     print('Loading video...')
-    #video = skvideo.io.vread('videos/cloudless_lights_3.avi')[:, :288]
-    #video = video*0.1
-    #video = video.astype(np.uint8)
     video = np.load('lights/ana_lights_gbg.npy')
+    video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
     server = socket.socket()
@@ -78,8 +91,8 @@ if __name__ == '__main__':
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
-    global action, start_time, user_start_time
-    threading.Thread(target=lights_thread, args=(lock, barrier, strips, video)).start()
+    global action, start_time, user_start_time, ending_start_time
+    threading.Thread(target=lights_thread, args=(lock, barrier, strips, video, video_ending)).start()
 
     while True:
         action_recv = conn.recv(1024).decode()
@@ -104,4 +117,10 @@ if __name__ == '__main__':
         elif action_recv == 'resume':
             with lock:
                 action = 'start'
+                barrier.wait()
+
+        elif action_recv == 'ending':
+            with lock:
+                action = 'ending'
+                ending_start_time = time.time()
                 barrier.wait()
