@@ -101,8 +101,11 @@ if __name__ == '__main__':
                 conn.send(msg.encode())
                 wait_to_start = conn.recv(1024).decode()
                 start_time = time.time()
-                action = 'start'
-                barrier.wait()
+                if action == 'stop' or action == 'pause':
+                    action = 'start'
+                    barrier.wait()
+                else:
+                    action = 'start'
 
         elif action_recv == 'stop':
             with lock:
@@ -119,6 +122,9 @@ if __name__ == '__main__':
 
         elif action_recv == 'ending':
             with lock:
-                action = 'ending'
                 ending_start_time = time.time()
-                #barrier.wait()
+                if action == 'stop' or action == 'pause':
+                    action = 'ending'
+                    barrier.wait()
+                else:
+                    action = 'ending'
