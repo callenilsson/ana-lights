@@ -121,4 +121,4 @@ if __name__ == '__main__':
             with lock:
                 action = 'ending'
                 ending_start_time = time.time()
-                barrier.wait()
+                #barrier.wait()
