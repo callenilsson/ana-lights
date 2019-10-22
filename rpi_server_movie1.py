@@ -96,9 +96,7 @@ if __name__ == '__main__':
         action_recv = conn.recv(1024).decode()
         if action_recv == 'start':
             with lock:
-                hej = conn.recv(1024).decode()
-                print(hej)
-                user_start_time = float(hej)
+                user_start_time = float(conn.recv(1024).decode())
                 msg = 'RPi 1 ready to start at ' + str(user_start_time)
                 conn.send(msg.encode())
                 wait_to_start = conn.recv(1024).decode()
