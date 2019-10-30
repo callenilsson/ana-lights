@@ -33,7 +33,9 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int((time.time() - start_time + user_start_time)*fps)
+                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
+                print(time.time(), '+', diff_time, '-', start_time, '+', user_start_time)
+                print(true_index)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -53,7 +55,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'ending':
             try:
                 #t = time.time()
-                true_index = int((time.time() - ending_start_time)*fps)
+                true_index = int((time.time()-diff_time - ending_start_time)*fps)
                 frame = video_ending[true_index]
                 applyNumpyColors(strip, frame)
                 #print(int(1/(time.time() - t)), 'fps')
@@ -90,9 +92,8 @@ if __name__ == '__main__':
 
     laptop_time = float(conn.recv(1024).decode())
     pi_time = time.time()
-    diff_time = pi_time - laptop_time
+    diff_time = laptop_time - pi_time
     print(diff_time)
-    exit()
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
