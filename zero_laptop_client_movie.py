@@ -31,7 +31,9 @@ def start(pies):
     for pi in pies: print(pi.recv(1024).decode())
     # Ready
     input('Press enter to start')
-    for pi in pies: pi.send(str(time.time()).encode())
+    for pi in pies:
+        start_time = time.time()
+        pi.send(str(start_time).encode())
 
 def stop(pies):
     for pi in pies: pi.send('stop'.encode())
@@ -53,7 +55,11 @@ if __name__ == "__main__":
     rpi1 = socket.socket()
     rpi1.connect(('192.168.0.152', 9091))
     pies = [rpi1]
-    for pi in pies: pi.send(str(time.time()).encode())
+
+    # Send laptop time to pies to sync time differences
+    for pi in pies:
+        laptop_time = time.time()
+        pi.send(str(laptop_time).encode())
 
     while True:
         print('---------------')

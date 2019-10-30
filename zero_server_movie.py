@@ -23,7 +23,7 @@ def colorWipe(strip):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, start_time, user_start_time, ending_start_time
+    global action, diff_time, start_time, user_start_time, ending_start_time
     barrier.wait()
     hej = 0
     while True:
@@ -34,9 +34,6 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 t = time.time()
                 true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
-                print(time.time(), '+', diff_time, '-', start_time, '+', user_start_time)
-                print(time.time()+diff_time - start_time + user_start_time)
-                print(true_index)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -75,7 +72,7 @@ if __name__ == '__main__':
     LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
     LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-    strip = Adafruit_NeoPixel(288, 12, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
+    strip = Adafruit_NeoPixel(288, 13, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
     strip.begin()
 
     print('Loading video...')
@@ -91,14 +88,15 @@ if __name__ == '__main__':
     print('Ready')
     conn, client_address = server.accept()
 
-    laptop_time = float(conn.recv(1024).decode())-30
+    global action, diff_time, start_time, user_start_time, ending_start_time
+    # Get laptop time to sync time difference
+    laptop_time = float(conn.recv(1024).decode())
     pi_time = time.time()
     diff_time = laptop_time - pi_time
-    print(diff_time)
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
-    global action, start_time, user_start_time, ending_start_time
+    
     action = 'stop'
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
@@ -109,9 +107,7 @@ if __name__ == '__main__':
                 user_start_time = float(conn.recv(1024).decode())
                 msg = 'RPi Zero ready to start at ' + str(user_start_time)
                 conn.send(msg.encode())
-                start_time = float(conn.recv(1024).decode())-30
-                #start_time = time.time()
-                #print(start_time - wait_to_start)
+                start_time = float(conn.recv(1024).decode())
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()
