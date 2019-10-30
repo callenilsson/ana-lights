@@ -30,11 +30,11 @@ def lights_thread(lock, barrier, strips, video, video_ending):
 
         if get_action == 'start':
             try:
-                #t = time.time()
+                t = time.time()
                 true_index = int((time.time() - start_time + user_start_time)*fps)
                 frame = video[true_index]
                 for strip in strips: applyNumpyColors(strip, frame)
-                #print(int(1/(time.time() - t)), 'fps')
+                print(int(1/(time.time() - t)), 'fps')
             except:
                 with lock:
                     action = 'stop'
