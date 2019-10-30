@@ -91,7 +91,7 @@ if __name__ == '__main__':
     conn, client_address = server.accept()
 
     laptop_time = float(conn.recv(1024).decode())
-    time.sleep(5)
+    time.sleep(10)
     pi_time = time.time()
     diff_time = laptop_time - pi_time
     print(diff_time)
