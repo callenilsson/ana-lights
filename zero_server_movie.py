@@ -13,7 +13,12 @@ import threading
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2])))
+        t1 = time.time()
+        bajs = Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2]))
+        t2 = time.time()
+        strip.setPixelColor(i, bajs)
+        t3 = time.time()
+        print(t2-t1, t3-t2)
     strip.show()
 
 def colorWipe(strip):
