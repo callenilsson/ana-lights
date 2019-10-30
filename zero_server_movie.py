@@ -77,8 +77,9 @@ if __name__ == '__main__':
 
     print('Loading video...')
     #video = np.load('lights/ana_lights_gbg.npy')
-    video_ending = np.load('lights/ana_ending.npy')
+    #video_ending = np.load('lights/ana_ending.npy')
     video = p.load(open('lights/ana_lights_gbg_color.pkl', 'rb'))
+    video_ending = p.load(open('lights/ana_ending_color.pkl', 'rb'))
     fps = 30
 
     server = socket.socket()
@@ -102,6 +103,7 @@ if __name__ == '__main__':
                 conn.send(msg.encode())
                 wait_to_start = conn.recv(1024).decode()
                 start_time = time.time()
+                print(start_time - wait_to_start)
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()

@@ -31,7 +31,7 @@ def start(pies):
     for pi in pies: print(pi.recv(1024).decode())
     # Ready
     input('Press enter to start')
-    for pi in pies: pi.send('go'.encode())
+    for pi in pies: pi.send(str(time.time()).encode())
 
 def stop(pies):
     for pi in pies: pi.send('stop'.encode())
