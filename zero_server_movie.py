@@ -83,7 +83,7 @@ if __name__ == '__main__':
     fps = 30
 
     server = socket.socket()
-    server.bind(('0.0.0.0', 9090))
+    server.bind(('0.0.0.0', 9091))
     server.listen(1)
     print('Ready')
     conn, client_address = server.accept()
