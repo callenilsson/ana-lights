@@ -33,7 +33,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
+                true_index = int((time.time()-diff_time - start_time + user_start_time)*fps)
                 print(time.time(), '+', diff_time, '-', start_time, '+', user_start_time)
                 print(true_index)
                 frame = video[true_index]
