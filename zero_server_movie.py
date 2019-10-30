@@ -75,11 +75,10 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    video = np.load('lights/ana_lights_gbg_lite.npy')
-    video_ending = np.load('lights/ana_ending.npy')
+    #video = np.load('lights/ana_lights_gbg.npy')
+    #video_ending = np.load('lights/ana_ending.npy')
+    video = pickle.load(open('lights/ana_lights_gbg_color.obj', 'rb'))
     fps = 30
-
-    video = pickle.load(open('lights/ana_lights_gbg_color.obj', 'r'))
 
     server = socket.socket()
     server.bind(('0.0.0.0', 9090))
@@ -98,7 +97,7 @@ if __name__ == '__main__':
         if action_recv == 'start':
             with lock:
                 user_start_time = float(conn.recv(1024).decode())
-                msg = 'RPi 1 ready to start at ' + str(user_start_time)
+                msg = 'RPi Zero ready to start at ' + str(user_start_time)
                 conn.send(msg.encode())
                 wait_to_start = conn.recv(1024).decode()
                 start_time = time.time()
