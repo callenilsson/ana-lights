@@ -12,5 +12,5 @@ for i in range(len(video[:300])):
     for j in range(len(frame)):
         frame_color.append(Color(int(frame[j][0][1]), int(frame[j][0][0]), int(frame[j][0][2])))
     video_color.append(frame_color)
-with open('lights/ana_lights_gbg_color.obj', 'w') as f:
+with open('lights/ana_lights_gbg_color.pkl', 'w') as f:
     p.dump(video_color, f)
