@@ -13,12 +13,7 @@ import threading
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        #t1 = time.time()
-        #bajs = Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2]))
-        #t2 = time.time()
         strip.setPixelColor(i, frame[i])
-        #t3 = time.time()
-        #print(t2-t1, t3-t2)
     strip.show()
 
 def colorWipe(strip):
@@ -85,10 +80,7 @@ if __name__ == '__main__':
     fps = 30
 
     video_color = []
-    j = 0
     for frame in video[:500]:
-        j += 1
-        print(j, '/', len(video))
         frame_color = []
         for i in range(len(frame)):
             frame_color.append(Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2])))
