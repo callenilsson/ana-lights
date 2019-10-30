@@ -21,7 +21,7 @@ def colorWipe(strip):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
-def lights_thread(lock, barrier, strips, video, video_ending):
+def lights_thread(lock, barrier, strip, video, video_ending):
     global action, start_time, user_start_time, ending_start_time
     barrier.wait()
     while True:
@@ -33,14 +33,14 @@ def lights_thread(lock, barrier, strips, video, video_ending):
                 t = time.time()
                 true_index = int((time.time() - start_time + user_start_time)*fps)
                 frame = video[true_index]
-                for strip in strips: applyNumpyColors(strip, frame)
+                applyNumpyColors(strip, frame)
                 print(int(1/(time.time() - t)), 'fps')
             except:
                 with lock:
                     action = 'stop'
 
         elif get_action == 'stop':
-            for strip in strips: colorWipe(strip)
+            colorWipe(strip)
             barrier.wait()
 
         elif get_action == 'pause':
@@ -51,7 +51,7 @@ def lights_thread(lock, barrier, strips, video, video_ending):
                 #t = time.time()
                 true_index = int((time.time() - ending_start_time)*fps)
                 frame = video_ending[true_index]
-                for strip in strips: applyNumpyColors(strip, frame)
+                applyNumpyColors(strip, frame)
                 #print(int(1/(time.time() - t)), 'fps')
             except:
                 with lock:
@@ -68,13 +68,8 @@ if __name__ == '__main__':
     LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
     LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-    strip1 = Adafruit_NeoPixel(144, 12, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
-    strip2 = Adafruit_NeoPixel(288, 13, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
-    strip3 = Adafruit_NeoPixel(288, 19, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
-    strip1.begin()
-    strip2.begin()
-    strip3.begin()
-    strips = [strip1, strip2, strip3]
+    strip = Adafruit_NeoPixel(288, 12, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 0)
+    strip.begin()
 
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
@@ -91,7 +86,7 @@ if __name__ == '__main__':
     barrier = threading.Barrier(2)
     global action, start_time, user_start_time, ending_start_time
     action = 'stop'
-    threading.Thread(target=lights_thread, args=(lock, barrier, strips, video, video_ending)).start()
+    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
         action_recv = conn.recv(1024).decode()
