@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     video_color = []
     j = 0
-    for frame in video:
+    for frame in video[:500]:
         j += 1
         print(j, '/', len(video))
         frame_color = []
