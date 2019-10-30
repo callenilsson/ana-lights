@@ -79,18 +79,7 @@ if __name__ == '__main__':
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
-    video_color = []
-    j = 0
-    for frame in video:
-        j += 1
-        if j % 100 == 0:
-            print(j)
-        frame_color = []
-        for i in range(len(frame)):
-            frame_color.append(Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2])))
-        video_color.append(frame_color)
-    with open('lights/ana_lights_gbg_color.obj', 'w') as f:
-        pickle.dump(video_color, f)
+    video = pickle.load(open('lights/ana_lights_gbg_color.obj', 'r'))
 
     server = socket.socket()
     server.bind(('0.0.0.0', 9090))
