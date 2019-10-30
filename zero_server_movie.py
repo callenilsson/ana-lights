@@ -85,7 +85,10 @@ if __name__ == '__main__':
     fps = 30
 
     video_color = []
+    j = 0
     for frame in video:
+        j += 1
+        print(j, '/', len(video))
         frame_color = []
         for i in range(len(frame)):
             frame_color.append(Color(int(frame[i][0][1]), int(frame[i][0][0]), int(frame[i][0][2])))
