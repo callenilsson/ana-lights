@@ -83,7 +83,7 @@ if __name__ == '__main__':
     j = 0
     for frame in video:
         j += 1
-        if j % 100 = 0:
+        if j % 100 == 0:
             print(j)
         frame_color = []
         for i in range(len(frame)):
