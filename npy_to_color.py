@@ -4,7 +4,7 @@ import pickle as p
 video = np.load('lights/ana_lights_gbg.npy') 
 video_color = []
 j = 0
-for i in range(len(video)):
+for i in range(len(video[:300])):
     if i % 100 == 0: print(i, '/', len(video))
     frame = video[i]
     frame_color = []
