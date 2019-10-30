@@ -24,6 +24,7 @@ def colorWipe(strip):
 def lights_thread(lock, barrier, strip, video, video_ending):
     global action, start_time, user_start_time, ending_start_time
     barrier.wait()
+    hej = 0
     while True:
         with lock:
             get_action = str(action)
@@ -34,12 +35,14 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                 true_index = int((time.time() - start_time + user_start_time)*fps)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
-                print(int(1/(time.time() - t)), 'fps')
+                hej = int(1/(time.time() - t))
+                #print(int(1/(time.time() - t)), 'fps')
             except:
                 with lock:
                     action = 'stop'
 
         elif get_action == 'stop':
+            print(hej, 'fps')
             colorWipe(strip)
             barrier.wait()
 
