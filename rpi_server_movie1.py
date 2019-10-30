@@ -77,7 +77,7 @@ if __name__ == '__main__':
     strips = [strip1, strip2, strip3]
 
     print('Loading video...')
-    video = np.load('lights/ana_lights_gbg.npy')
+    video = np.load('lights/ana_lights_gbg_lite.npy')
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
