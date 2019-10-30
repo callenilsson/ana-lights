@@ -53,6 +53,8 @@ if __name__ == "__main__":
     rpi1 = socket.socket()
     rpi1.connect(('192.168.0.152', 9091))
     pies = [rpi1]
+    for pi in pies: pi.send(str(time.time()).encode())
+    exitt(pies)
 
     while True:
         print('---------------')

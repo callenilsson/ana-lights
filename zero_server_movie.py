@@ -88,6 +88,12 @@ if __name__ == '__main__':
     print('Ready')
     conn, client_address = server.accept()
 
+    laptop_time = float(conn.recv(1024).decode())
+    pi_time = time.time()
+    diff_time = pi_time - laptop_time
+    print(diff_time)
+    exit()
+
     lock = threading.Lock()
     barrier = threading.Barrier(2)
     global action, start_time, user_start_time, ending_start_time
@@ -101,9 +107,9 @@ if __name__ == '__main__':
                 user_start_time = float(conn.recv(1024).decode())
                 msg = 'RPi Zero ready to start at ' + str(user_start_time)
                 conn.send(msg.encode())
-                wait_to_start = float(conn.recv(1024).decode())
-                start_time = time.time()
-                print(start_time - wait_to_start)
+                start_time = float(conn.recv(1024).decode())
+                #start_time = time.time()
+                #print(start_time - wait_to_start)
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()
