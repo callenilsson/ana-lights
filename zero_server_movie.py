@@ -33,8 +33,9 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int((time.time()-diff_time - start_time + user_start_time)*fps)
+                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
                 print(time.time(), '+', diff_time, '-', start_time, '+', user_start_time)
+                print(time.time()+diff_time - start_time + user_start_time)
                 print(true_index)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
@@ -109,7 +110,7 @@ if __name__ == '__main__':
                 user_start_time = float(conn.recv(1024).decode())
                 msg = 'RPi Zero ready to start at ' + str(user_start_time)
                 conn.send(msg.encode())
-                start_time = float(conn.recv(1024).decode())
+                start_time = float(conn.recv(1024).decode())+10
                 #start_time = time.time()
                 #print(start_time - wait_to_start)
                 if action == 'stop' or action == 'pause':
