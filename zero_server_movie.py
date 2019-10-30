@@ -10,6 +10,7 @@ import time
 import zlib
 import skvideo.io
 import threading
+import pickle as p
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     print('Loading video...')
     #video = np.load('lights/ana_lights_gbg.npy')
     #video_ending = np.load('lights/ana_ending.npy')
-    video = pickle.load(open('lights/ana_lights_gbg_color.obj', 'rb'))
+    video = p.load(open('lights/ana_lights_gbg_color.obj', 'rb'))
     fps = 30
 
     server = socket.socket()
