@@ -1,5 +1,5 @@
 import time
-from neopixel import *
+from rpi_ws281x import *
 import numpy as np
 import math
 import random
