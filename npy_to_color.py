@@ -1,5 +1,6 @@
 import numpy as np
 import pickle as p
+from rpi_ws281x import *
 
 video = np.load('lights/ana_lights_gbg.npy') 
 video_color = []
