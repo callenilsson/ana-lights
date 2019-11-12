@@ -65,17 +65,25 @@ if __name__ == '__main__':
 
     while True:
         try:
-            t = time.time()
+            t1 = time.time()
             data = conn.recv(4)
+            t2 = time.time()
             data_size = bytesToInt(data)
+            t3 = time.time()
             data = recv_all(conn, data_size)
+            t4 = time.time()
             data = zlib.decompress(data)
+            t5 = time.time()
             frame = json.loads(data.decode())
+            t6 = time.time()
 
             applyNumpyColors(strip, frame)
+            t7 = time.time()
 
             conn.sendall(intToBytes(1))
-            print(int(1/(time.time()-t)), 'fps')
+            t8 = time.time()
+            print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7)
+            #print(int(1/(time.time()-t)), 'fps')
         except Exception as e:
             print(e)
             colorWipe(strip)

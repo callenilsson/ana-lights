@@ -40,8 +40,8 @@ while True:
     rpi.sendall(data_size)
     rpi.sendall(data)
 
-    data = rpi1.recv(4)
-    next1 = bytesToInt(data1)
+    data = rpi.recv(4)
+    next1 = bytesToInt(data)
     if not(next1 == 1):
         exit()
 
