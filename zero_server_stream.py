@@ -60,31 +60,16 @@ if __name__ == '__main__':
     print('ready')
 
     server = socket.socket()
-    server.bind(('0.0.0.0', 9091))
+    server.bind(('0.0.0.0', 9090))
     server.listen(1)
     conn, client_address = server.accept()
 
-    HEADERSIZE = 10
-
     while True:
         try:
-            full_msg = b''
-            new_msg = True
-            while True:
-                msg = conn.recv(16)
-                if new_msg:
-                    msglen = int(msg[:HEADERSIZE])
-                    new_msg = False
 
-                full_msg += msg
-
-                if len(full_msg)-HEADERSIZE == msglen:
-                    print("full msg recvd")
-                    print(full_msg[HEADERSIZE:])
-                    print(pickle.loads(full_msg[HEADERSIZE:]))
-                    new_msg = True
-                    full_msg = b""
-
+            data = conn.recv(12000)
+            frame = pickle.loads(data)
+            print(frame)
 
 
             # t1 = time.time()
