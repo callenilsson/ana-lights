@@ -22,9 +22,7 @@ mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
 sct = mss.mss()
 while True:
     t = time.time()
-
-    img = np.asarray(sct.grab(mon))[:,:,:3]
-    print(img.shape)
+    img = np.asarray(sct.grab(mon))[:,0,:3]
 
     img_color = []
     for i in range(len(img)):
