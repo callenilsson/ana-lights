@@ -8,6 +8,13 @@ import cv2
 import mss
 import pickle
 
+def Color(red, green, blue, white=0):
+    """Convert the provided red, green, blue color to a 24-bit color value.
+    Each color component should be a value 0-255 where 0 is the lowest intensity
+    and 255 is the highest intensity.
+    """
+    return (white << 24) | (red << 16) | (green << 8) | blue
+
 rpi = socket.socket()
 rpi.connect(('192.168.0.152', 9090))
 
@@ -18,6 +25,13 @@ while True:
 
     img = np.asarray(sct.grab(mon))[:,:,:3]
     img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)[:,0,:]
+
+    img_color = []
+    for i in range(len(img)):
+        img_color.append(Color(int(img[i,1]), int(img[i,2]), int(img[i,0])))
+    #print(img_color)
+    print(Color(128,230,125))
+    #exit()
 
     data = pickle.dumps(img)
     rpi.send(data)

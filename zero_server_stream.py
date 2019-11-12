@@ -12,12 +12,8 @@ import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        t1 = time.time()
-        hej = Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0]))
-        t2 = time.time()
-        strip.setPixelColor(i, hej)
-        t3 = time.time()
-        print(t2-t1, t3-t2)
+        print(Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0])))
+        strip.setPixelColor(i, Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0])))
     strip.show()
 
 def colorWipe(strip):
