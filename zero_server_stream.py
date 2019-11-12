@@ -66,30 +66,54 @@ if __name__ == '__main__':
 
     while True:
         try:
-            t1 = time.time()
-            data = conn.recv(4)
-            t2 = time.time()
-            data_size = bytesToInt(data)
-            t3 = time.time()
-            data = recv_all(conn, data_size)
-            t4 = time.time()
-            data = zlib.decompress(data)
-            t5 = time.time()
-            data = data.decode()
-            t6 = time.time()
-            print(data)
-            print(len(data))
-            #frame = json.loads(data)
-            frame = pickle.loads(data)
-            t7 = time.time()
+            full_msg = b''
+            new_msg = True
+            while True:
+                msg = conn.recv(16)
+                if new_msg:
+                    print("new msg len:",msg[:HEADERSIZE])
+                    msglen = int(msg[:HEADERSIZE])
+                    new_msg = False
 
-            applyNumpyColors(strip, frame)
-            t8 = time.time()
+                print(f"full message length: {msglen}")
 
-            conn.sendall(intToBytes(1))
-            t9 = time.time()
-            print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7, t9-t8, '\n')
-            #print(int(1/(time.time()-t)), 'fps')
+                full_msg += msg
+
+                print(len(full_msg))
+
+                if len(full_msg)-HEADERSIZE == msglen:
+                    print("full msg recvd")
+                    print(full_msg[HEADERSIZE:])
+                    print(pickle.loads(full_msg[HEADERSIZE:]))
+                    new_msg = True
+                    full_msg = b""
+
+
+
+            # t1 = time.time()
+            # data = conn.recv(4)
+            # t2 = time.time()
+            # data_size = bytesToInt(data)
+            # t3 = time.time()
+            # data = recv_all(conn, data_size)
+            # t4 = time.time()
+            # data = zlib.decompress(data)
+            # t5 = time.time()
+            # data = data.decode()
+            # t6 = time.time()
+            # print(data)
+            # print(len(data))
+            # #frame = json.loads(data)
+            # frame = pickle.loads(data)
+            # t7 = time.time()
+
+            # applyNumpyColors(strip, frame)
+            # t8 = time.time()
+
+            # conn.sendall(intToBytes(1))
+            # t9 = time.time()
+            # print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7, t9-t8, '\n')
+            # #print(int(1/(time.time()-t)), 'fps')
         except Exception as e:
             print(e)
             colorWipe(strip)

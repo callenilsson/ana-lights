@@ -35,13 +35,14 @@ while True:
     img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)
 
     #data = json.dumps(img.tolist()).encode()
-    data = pickle.dumps(img)
-    
-    data = zlib.compress(data)
-    data_size = intToBytes(len(data)) # 4 bytes
-
-    rpi.sendall(data_size)
-    rpi.sendall(data)
+    #data = pickle.dumps(img)
+    #data = zlib.compress(data)
+    #data_size = intToBytes(len(data)) # 4 bytes
+    #rpi.sendall(data_size)
+    #rpi.sendall(data)
+    msg = pickle.dumps(img)
+    msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8') + msg
+    rpi.send(msg)
 
     data = rpi.recv(4)
     next1 = bytesToInt(data)
