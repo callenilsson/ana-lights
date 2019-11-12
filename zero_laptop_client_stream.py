@@ -40,7 +40,7 @@ while True:
     #data_size = intToBytes(len(data)) # 4 bytes
     #rpi.sendall(data_size)
     #rpi.sendall(data)
-    data = pickle.dumps(img)
+    data = zlib.decompress(pickle.dumps(img))
     rpi.send(data)
 
     # data = rpi.recv(4)
