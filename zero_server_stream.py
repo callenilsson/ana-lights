@@ -66,13 +66,12 @@ if __name__ == '__main__':
 
     while True:
         try:
-
+            t1 = time.time()
             data = conn.recv(4096)
-            print(len(data))
-            frame = pickle.loads(zlib.decompress(data))
-            print(frame)
             conn.send('next'.encode())
-
+            frame = pickle.loads(zlib.decompress(data))
+            applyNumpyColors(strip, frame)
+            print(int(1/(time.time()-t1)), 'fps')
 
             # t1 = time.time()
             # data = conn.recv(4)
