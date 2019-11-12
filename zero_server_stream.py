@@ -66,42 +66,11 @@ if __name__ == '__main__':
 
     while True:
         try:
-            t1 = time.time()
             data = conn.recv(4096)
-            t2 = time.time()
-            conn.send('next'.encode())
-            t3 = time.time()
+            
             frame = pickle.loads(data)
-            t4 = time.time()
             applyNumpyColors(strip, frame)
-            t5 = time.time()
-            #print(t2-t1, t3-t2, t4-t3, t5-t4, '\n')
-            #print(int(1/(time.time()-t1)), 'fps')
-
-            # t1 = time.time()
-            # data = conn.recv(4)
-            # t2 = time.time()
-            # data_size = bytesToInt(data)
-            # t3 = time.time()
-            # data = recv_all(conn, data_size)
-            # t4 = time.time()
-            # data = zlib.decompress(data)
-            # t5 = time.time()
-            # data = data.decode()
-            # t6 = time.time()
-            # print(data)
-            # print(len(data))
-            # #frame = json.loads(data)
-            # frame = pickle.loads(data)
-            # t7 = time.time()
-
-            # applyNumpyColors(strip, frame)
-            # t8 = time.time()
-
-            # conn.sendall(intToBytes(1))
-            # t9 = time.time()
-            # print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7, t9-t8, '\n')
-            # #print(int(1/(time.time()-t)), 'fps')
+            conn.send('next'.encode())
         except Exception as e:
             print(e)
             colorWipe(strip)
