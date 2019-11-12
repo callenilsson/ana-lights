@@ -32,8 +32,7 @@ while True:
     t = time.time()
 
     img = np.asarray(sct.grab(mon))[:,:,:3]
-    img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)
-
+    img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)[:,0,:]
     print(img.shape)
 
     #data = json.dumps(img.tolist()).encode()
