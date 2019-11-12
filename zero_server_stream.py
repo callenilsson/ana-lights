@@ -68,9 +68,10 @@ if __name__ == '__main__':
         try:
             t1 = time.time()
             data = conn.recv(4096)
-            conn.send('next'.encode())
+            
             frame = pickle.loads(zlib.decompress(data))
             applyNumpyColors(strip, frame)
+            conn.send('next'.encode())
             print(int(1/(time.time()-t1)), 'fps')
 
             # t1 = time.time()
