@@ -24,7 +24,7 @@ def bytesToInt(b):
     return n
 
 rpi = socket.socket()
-rpi.connect(('192.168.0.152', 9090))
+rpi.connect(('192.168.0.152', 9091))
 
 mon = {'top' : 620, 'left' : 1400, 'width' : 1000, 'height' : 288}
 sct = mss.mss()
@@ -45,12 +45,13 @@ while True:
     msg = bytes(f"{len(msg):<{HEADERSIZE}}", 'utf-8') + msg
     rpi.send(msg)
 
-    data = rpi.recv(4)
-    next1 = bytesToInt(data)
-    if not(next1 == 1):
-        exit()
+    #data = rpi.recv(4)
+    #next1 = bytesToInt(data)
+    #if not(next1 == 1):
+    #    exit()
 
     delta = time.time()-t
     if delta < 1/60.0:
         time.sleep(1/60.0 - (delta))
     #print(int(1/(time.time()-t)), 'fps')
+    print(t)

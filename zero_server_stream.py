@@ -60,7 +60,7 @@ if __name__ == '__main__':
     print('ready')
 
     server = socket.socket()
-    server.bind(('0.0.0.0', 9090))
+    server.bind(('0.0.0.0', 9091))
     server.listen(1)
     conn, client_address = server.accept()
 
