@@ -76,6 +76,7 @@ if __name__ == '__main__':
             t5 = time.time()
             data = data.decode()
             t6 = time.time()
+            print(data)
             frame = json.loads(data)
             t7 = time.time()
 
