@@ -28,6 +28,7 @@ rpi.connect(('192.168.0.152', 9090))
 
 mon = {'top' : 620, 'left' : 1400, 'width' : 1000, 'height' : 288}
 sct = mss.mss()
+HEADERSIZE = 10
 while True:
     t = time.time()
 

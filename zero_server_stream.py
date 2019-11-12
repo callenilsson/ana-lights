@@ -64,6 +64,8 @@ if __name__ == '__main__':
     server.listen(1)
     conn, client_address = server.accept()
 
+    HEADERSIZE = 10
+
     while True:
         try:
             full_msg = b''
