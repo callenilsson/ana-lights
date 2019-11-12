@@ -14,9 +14,7 @@ import pickle as p
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        if frame[i] == 0: continue
-        print(frame[i])
-        strip.setPixelColor(i, frame[i])
+        strip.setPixelColor(i, Color(10,10,10))
     strip.show()
 
 def colorWipe(strip):
