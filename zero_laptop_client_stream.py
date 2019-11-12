@@ -41,6 +41,7 @@ while True:
     #rpi.sendall(data_size)
     #rpi.sendall(data)
     data = zlib.compress(pickle.dumps(img))
+    print(len(data))
     rpi.send(data)
 
     # data = rpi.recv(4)
