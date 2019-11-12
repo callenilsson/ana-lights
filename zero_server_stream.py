@@ -8,6 +8,7 @@ import json
 import numpy as np
 import time
 import zlib
+import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -78,7 +79,8 @@ if __name__ == '__main__':
             t6 = time.time()
             print(data)
             print(len(data))
-            frame = json.loads(data)
+            #frame = json.loads(data)
+            frame = pickle.loads(data)
             t7 = time.time()
 
             applyNumpyColors(strip, frame)

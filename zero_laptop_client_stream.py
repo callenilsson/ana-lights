@@ -6,6 +6,7 @@ import numpy as np
 import zlib
 import cv2
 import mss
+import pickle
 
 def intToBytes(n):
     b = bytearray([0, 0, 0, 0])   # init
@@ -33,7 +34,9 @@ while True:
     img = np.asarray(sct.grab(mon))[:,:,:3]
     img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)
 
-    data = json.dumps(img.tolist()).encode()
+    #data = json.dumps(img.tolist()).encode()
+    data = pickle.dumps(img)
+    
     data = zlib.compress(data)
     data_size = intToBytes(len(data)) # 4 bytes
 
