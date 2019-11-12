@@ -10,10 +10,9 @@ import time
 import zlib
 import pickle
 
-def applyNumpyColors(strip, frame):
+def applyNumpyColors(strip, img_color):
     for i in range(strip.numPixels()):
-        print(Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0])))
-        strip.setPixelColor(i, Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0])))
+        strip.setPixelColor(i, img_color[i]))
     strip.show()
 
 def colorWipe(strip):
@@ -46,8 +45,8 @@ if __name__ == '__main__':
         try:
             data = conn.recv(4096)
             conn.send('next'.encode())
-            frame = pickle.loads(data)
-            applyNumpyColors(strip, frame)
+            img_color = pickle.loads(data)
+            applyNumpyColors(strip, img_color)
         except Exception as e:
             print(e)
             colorWipe(strip)

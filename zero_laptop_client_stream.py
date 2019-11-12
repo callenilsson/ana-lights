@@ -29,11 +29,8 @@ while True:
     img_color = []
     for i in range(len(img)):
         img_color.append(Color(int(img[i,1]), int(img[i,2]), int(img[i,0])))
-    #print(img_color)
-    print(Color(128,230,125))
-    #exit()
 
-    data = pickle.dumps(img)
+    data = pickle.dumps(img_color)
     rpi.send(data)
     rpi.recv(1024).decode()
 
