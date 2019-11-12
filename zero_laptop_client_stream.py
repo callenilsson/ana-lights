@@ -43,14 +43,15 @@ while True:
     data = zlib.compress(pickle.dumps(img))
     print(len(data))
     rpi.send(data)
+    print(rpi.recv(1024).decode())
 
     # data = rpi.recv(4)
     # next1 = bytesToInt(data)
     # if not(next1 == 1):
     #     exit()
 
-    delta = time.time()-t
-    if delta < 1/60.0:
-        time.sleep(1/60.0 - (delta))
-    print(t)
+    #delta = time.time()-t
+    #if delta < 1/60.0:
+    #    time.sleep(1/60.0 - (delta))
+    #print(t)
     #print(int(1/(time.time()-t)), 'fps')

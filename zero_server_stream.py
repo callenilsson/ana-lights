@@ -71,6 +71,7 @@ if __name__ == '__main__':
             print(len(data))
             frame = pickle.loads(zlib.decompress(data))
             print(frame)
+            conn.send('next'.encode())
 
 
             # t1 = time.time()
