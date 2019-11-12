@@ -75,7 +75,7 @@ if __name__ == '__main__':
             t4 = time.time()
             applyNumpyColors(strip, frame)
             t5 = time.time()
-            print(t2-t1, t3-t2, t4-t3, t5-t4, '\n')
+            #print(t2-t1, t3-t2, t4-t3, t5-t4, '\n')
             #print(int(1/(time.time()-t1)), 'fps')
 
             # t1 = time.time()
