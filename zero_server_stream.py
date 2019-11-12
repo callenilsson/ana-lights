@@ -74,15 +74,17 @@ if __name__ == '__main__':
             t4 = time.time()
             data = zlib.decompress(data)
             t5 = time.time()
-            frame = json.loads(data.decode())
+            data = data.decode()
             t6 = time.time()
-
-            applyNumpyColors(strip, frame)
+            frame = json.loads(data)
             t7 = time.time()
 
-            conn.sendall(intToBytes(1))
+            applyNumpyColors(strip, frame)
             t8 = time.time()
-            print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7)
+
+            conn.sendall(intToBytes(1))
+            t9 = time.time()
+            print(t2-t1, t3-t2, t4-t3, t5-t4, t6-t5, t7-t6, t8-t7, t9-t8, '\n')
             #print(int(1/(time.time()-t)), 'fps')
         except Exception as e:
             print(e)
