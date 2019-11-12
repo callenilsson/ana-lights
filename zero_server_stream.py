@@ -68,7 +68,7 @@ if __name__ == '__main__':
         try:
 
             data = conn.recv(4096)
-            frame = zlib.decompress(pickle.loads(data))
+            frame = pickle.loads(zlib.decompress(data))
             print(frame)
 
 
