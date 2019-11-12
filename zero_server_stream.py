@@ -12,36 +12,18 @@ import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0])))
+        t1 = time.time()
+        hej = Color(int(frame[i,1]), int(frame[i,2]), int(frame[i,0]))
+        t2 = time.time()
+        strip.setPixelColor(i, hej)
+        t3 = time.time()
+        print(t2-t1, t3-t2)
     strip.show()
 
 def colorWipe(strip):
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
-
-def intToBytes(n):
-    b = bytearray([0, 0, 0, 0])   # init
-    b[3] = n & 0xFF
-    n >>= 8
-    b[2] = n & 0xFF
-    n >>= 8
-    b[1] = n & 0xFF
-    n >>= 8
-    b[0] = n & 0xFF
-    return b
-
-def bytesToInt(b):
-    n = (b[0]<<24) + (b[1]<<16) + (b[2]<<8) + b[3]
-    return n
-
-def recv_all(conn, size):
-    data = conn.recv(size)
-    while len(data) < size:
-        diff = size - len(data)
-        data += conn.recv(diff)
-        #print('HEJ')
-    return data
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -67,10 +49,9 @@ if __name__ == '__main__':
     while True:
         try:
             data = conn.recv(4096)
-            
+            conn.send('next'.encode())
             frame = pickle.loads(data)
             applyNumpyColors(strip, frame)
-            conn.send('next'.encode())
         except Exception as e:
             print(e)
             colorWipe(strip)

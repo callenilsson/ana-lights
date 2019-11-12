@@ -8,21 +8,6 @@ import cv2
 import mss
 import pickle
 
-def intToBytes(n):
-    b = bytearray([0, 0, 0, 0])   # init
-    b[3] = n & 0xFF
-    n >>= 8
-    b[2] = n & 0xFF
-    n >>= 8
-    b[1] = n & 0xFF
-    n >>= 8
-    b[0] = n & 0xFF
-    return b
-
-def bytesToInt(b):
-    n = (b[0]<<24) + (b[1]<<16) + (b[2]<<8) + b[3]
-    return n
-
 rpi = socket.socket()
 rpi.connect(('192.168.0.152', 9090))
 
