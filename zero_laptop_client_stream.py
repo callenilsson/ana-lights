@@ -32,7 +32,7 @@ while True:
     t = time.time()
 
     img = np.asarray(sct.grab(mon))[:,:,:3]
-    img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)[:,0,:]
+    img = cv2.resize(img, dsize=(10, 288), interpolation=cv2.INTER_NEAREST)[:,:1,:]
     print(img.shape)
 
     #data = json.dumps(img.tolist()).encode()
@@ -41,7 +41,7 @@ while True:
     #data_size = intToBytes(len(data)) # 4 bytes
     #rpi.sendall(data_size)
     #rpi.sendall(data)
-    data = zlib.compress(pickle.dumps(img))
+    data = pickle.dumps(img)
     rpi.send(data)
     rpi.recv(1024).decode()
 
