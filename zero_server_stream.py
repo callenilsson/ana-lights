@@ -44,9 +44,10 @@ if __name__ == '__main__':
     while True:
         try:
             data = conn.recv(4096)
-            conn.send('next'.encode())
+            
             img_color = pickle.loads(data)
             applyNumpyColors(strip, img_color)
+            conn.send('next'.encode())
         except Exception as e:
             print(e)
             colorWipe(strip)
