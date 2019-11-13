@@ -14,7 +14,7 @@ import pickle as p
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, frame[i])
+        strip.setPixelColor(i, int(frame[i]))
     strip.show()
 
 def colorWipe(strip):
@@ -77,10 +77,10 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    #video = np.load('lights/ana_lights_gbg.npy')
-    #video_ending = np.load('lights/ana_ending.npy')
-    video = p.load(open('lights/ana_lights_gbg.pkl', 'rb'))
-    video_ending = p.load(open('lights/ana_ending.pkl', 'rb'))
+    video = np.load('lights/ana_lights_gbg.npy')
+    video_ending = np.load('lights/ana_ending.npy')
+    #video = p.load(open('lights/ana_lights_gbg.pkl', 'rb'))
+    #video_ending = p.load(open('lights/ana_ending.pkl', 'rb'))
     fps = 30
 
     server = socket.socket()
