@@ -31,17 +31,16 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             get_action = str(action)
 
         if get_action == 'start':
-            # try:
-            t = time.time()
-            true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
-            frame = video[true_index]
-            applyNumpyColors(strip, frame)
-            hej = int(1/(time.time() - t))
-            print(hej, 'fps')
-            #print(int(1/(time.time() - t)), 'fps')
-            # except:
-            #     with lock:
-            #         action = 'stop'
+            try:
+                t = time.time()
+                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
+                frame = video[true_index]
+                applyNumpyColors(strip, frame)
+                hej = int(1/(time.time() - t))
+                #print(int(1/(time.time() - t)), 'fps')
+            except:
+                with lock:
+                    action = 'stop'
 
         elif get_action == 'stop':
             print(hej, 'fps')
@@ -79,8 +78,6 @@ if __name__ == '__main__':
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
     video_ending = np.load('lights/ana_ending.npy')
-    #video = p.load(open('lights/ana_lights_gbg.pkl', 'rb'))
-    #video_ending = p.load(open('lights/ana_ending.pkl', 'rb'))
     fps = 30
 
     server = socket.socket()
