@@ -14,7 +14,7 @@ import pickle as p
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(10,10,10))
+        strip.setPixelColor(i, frame[i])
     strip.show()
 
 def colorWipe(strip):
@@ -31,16 +31,16 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             get_action = str(action)
 
         if get_action == 'start':
-            try:
-                t = time.time()
-                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
-                frame = video[true_index]
-                applyNumpyColors(strip, frame)
-                hej = int(1/(time.time() - t))
-                #print(int(1/(time.time() - t)), 'fps')
-            except:
-                with lock:
-                    action = 'stop'
+            #try:
+            t = time.time()
+            true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
+            frame = video[true_index]
+            applyNumpyColors(strip, frame)
+            hej = int(1/(time.time() - t))
+            #print(int(1/(time.time() - t)), 'fps')
+            # except:
+            #     with lock:
+            #         action = 'stop'
 
         elif get_action == 'stop':
             print(hej, 'fps')
