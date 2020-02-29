@@ -110,6 +110,7 @@ if __name__ == '__main__':
 
     while True:
         action_recv = client.recv(1024).decode()
+        print(action_recv)
         if action_recv == 'start':
             client.send('RPi Zero ready to start'.encode())
             time.sleep(10)
