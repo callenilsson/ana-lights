@@ -24,7 +24,7 @@ def colorWipe(strip):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, diff_time, start_time, user_start_time, ending_start_time
+    global action, diff_time, start_time, show_start_time, ending_start_time
     barrier.wait()
     hej = 0
     while True:
@@ -34,7 +34,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int((time.time()+diff_time - start_time + user_start_time)*fps)
+                true_index = int((get_laptop_time() - show_start_time)*fps)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -54,7 +54,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'ending':
             try:
                 #t = time.time()
-                true_index = int((time.time()-diff_time - ending_start_time)*fps)
+                true_index = int((get_laptop_time() - ending_start_time)*fps)
                 frame = video_ending[true_index]
                 applyNumpyColors(strip, frame)
                 #print(int(1/(time.time() - t)), 'fps')
@@ -73,7 +73,8 @@ def get_diff_time(ip):
     return diff_sum / i
 
 def get_laptop_time():
-    pass
+    global action, diff_time, start_time, show_start_time, ending_start_time
+    return time.time() - diff_time
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -102,10 +103,8 @@ if __name__ == '__main__':
     client, client_address = server.accept()
 
     # Get laptop time to sync time difference
-    global action, diff_time, start_time, user_start_time, ending_start_time
+    global action, diff_time, start_time, show_start_time, ending_start_time
     diff_time = get_diff_time(client.getpeername()[0])
-    print(diff_time)
-    exit()
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
@@ -117,8 +116,8 @@ if __name__ == '__main__':
         action_recv = client.recv(1024).decode()
         if action_recv == 'start':
             with lock:
-                user_start_time = float(client.recv(1024).decode())
-                msg = 'RPi Zero ready to start at ' + str(user_start_time)
+                show_start_time = float(client.recv(1024).decode())
+                msg = 'RPi Zero ready to start at ' + str(show_start_time)
                 client.send(msg.encode())
                 start_time = float(client.recv(1024).decode())
                 if action == 'stop' or action == 'pause':
