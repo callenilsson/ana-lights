@@ -34,7 +34,8 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int(abs((get_laptop_time() - start_time)*fps))
+                with lock:
+                    true_index = int(abs((get_laptop_time() - start_time)*fps))
                 frame = video[true_index].tolist()
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -61,6 +62,12 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             except:
                 with lock:
                     action = 'stop'
+
+def time_thread(lock):
+    while True:
+        with lock:
+            diff_time = response.dest_time + response.offset - time.time()
+        time.sleep(1)
 
 def get_diff_time(ip):
     ntp = ntplib.NTPClient()
@@ -107,13 +114,12 @@ if __name__ == '__main__':
     #diff_time = get_diff_time(client.getpeername()[0])
     c = ntplib.NTPClient()
     response = c.request(client.getpeername()[0], version=4)
-    diff_time = response.dest_time + response.offset - time.time()
-    print(diff_time)
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
     
     action = 'stop'
+    threading.Thread(target=time_thread, args=(lock)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
