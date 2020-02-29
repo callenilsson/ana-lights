@@ -93,7 +93,7 @@ if __name__ == '__main__':
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
     video_ending = np.load('lights/ana_ending.npy')
-    fps = 30
+    fps = 60
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
