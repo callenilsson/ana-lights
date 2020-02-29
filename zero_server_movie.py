@@ -21,7 +21,7 @@ def stripStatus(strip, color):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, diff_time, start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time, client
     barrier.wait()
     hej = 0
     while True:
@@ -61,20 +61,21 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                     action = 'stop'
 
 def time_thread(lock, client):
-    global action, diff_time, start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time, client
     c = ntplib.NTPClient()
     while True:
-        response = c.request(client.getpeername()[0], version=4)
-        with lock:
-            diff_time = response.dest_time + response.offset - time.time()
+        if client:
+            response = c.request(client.getpeername()[0], version=4)
+            with lock:
+                diff_time = response.dest_time + response.offset - time.time()
         time.sleep(1)
 
 def get_laptop_time():
-    global action, diff_time, start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time, client
     return time.time() - diff_time
 
 if __name__ == '__main__':
-    global action, diff_time, start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time, client
     lock = threading.Lock()
     barrier = threading.Barrier(2)
 
@@ -96,9 +97,10 @@ if __name__ == '__main__':
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
+    threading.Thread(target=time_thread, args=(lock,)).start()
+    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
+
     while True:
-        t1 = None
-        t2 = None
         try:
             server = socket.socket()
             server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -109,16 +111,11 @@ if __name__ == '__main__':
             client, client_address = server.accept()
 
             action = 'stop'
-            t1 = threading.Thread(target=time_thread, args=(lock, client))
-            t1.start()
-            t2 = threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending))
-            t2.start()
+            
 
             while True:
                 action_recv = client.recv(1024).decode()
                 if action_recv == '':
-                    t1.stop()
-                    t2.stop()
                     break
                 if action_recv == 'start':
                     client.send('RPi Zero ready to start'.encode())
@@ -153,5 +150,4 @@ if __name__ == '__main__':
                         else:
                             action = 'ending'
         except:
-            t1.stop()
-            t2.stop()
+            continue
