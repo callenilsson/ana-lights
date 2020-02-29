@@ -92,9 +92,11 @@ if __name__ == '__main__':
     print('Loading video...')
     video_chunks = []
     for i in range(5):
+        print(i)
         video_chunks.append(np.load('lights/ana_lights_gbg_' + str(i) + '.npy').tolist())
     video_ending = np.load('lights/ana_ending.npy').tolist()
     fps = 30
+    exit()
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
