@@ -35,7 +35,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 t = time.time()
                 true_index = int(abs((get_laptop_time() - start_time)*fps))
-                applyNumpyColors(strip, video[true_index].to_list())
+                applyNumpyColors(strip, video[true_index].tolist())
                 hej = int(1/(time.time() - t))
                 #print(int(1/(time.time() - t)), 'fps')
             except:
@@ -91,7 +91,6 @@ if __name__ == '__main__':
 
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
-    print(type(video[0]), video[0].to_list())
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
