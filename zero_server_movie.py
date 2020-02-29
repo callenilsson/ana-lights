@@ -97,7 +97,8 @@ if __name__ == '__main__':
     fps = 30
 
     while True:
-        t1, t2 = None
+        t1 = None
+        t2 = None
         try:
             server = socket.socket()
             server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
