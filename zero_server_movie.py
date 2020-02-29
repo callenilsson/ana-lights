@@ -64,7 +64,9 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                     action = 'stop'
 
 def time_thread(lock):
+    c = ntplib.NTPClient()
     while True:
+        response = c.request(client.getpeername()[0], version=4)
         with lock:
             diff_time = response.dest_time + response.offset - time.time()
         time.sleep(1)
@@ -112,8 +114,6 @@ if __name__ == '__main__':
     # Get laptop time to sync time difference
     global action, diff_time, start_time, ending_start_time
     #diff_time = get_diff_time(client.getpeername()[0])
-    c = ntplib.NTPClient()
-    response = c.request(client.getpeername()[0], version=4)
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
