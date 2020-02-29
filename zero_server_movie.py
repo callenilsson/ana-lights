@@ -92,7 +92,7 @@ if __name__ == '__main__':
     print('Loading video...')
     video = []
     for i in range(len(5)):
-        video += np.load('lights/ana_lights_gbg_' + str(i) '.npy').tolist()
+        video += np.load('lights/ana_lights_gbg_' + str(i) + '.npy').tolist()
     video_ending = np.load('lights/ana_ending.npy').tolist()
     print(len(video))
     fps = 30
