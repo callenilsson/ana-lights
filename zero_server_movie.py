@@ -104,8 +104,11 @@ if __name__ == '__main__':
 
     # Get laptop time to sync time difference
     global action, diff_time, start_time, ending_start_time
-    diff_time = get_diff_time(client.getpeername()[0])
-    print(diff_time)
+    #diff_time = get_diff_time(client.getpeername()[0])
+    c = ntplib.NTPClient()
+    response = c.request(client.getpeername()[0], version=4)
+    
+    print(response.offset)
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
