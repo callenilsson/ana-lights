@@ -121,7 +121,6 @@ if __name__ == '__main__':
                     break
                 if action_recv == 'start':
                     client.send('RPi Zero ready to start'.encode())
-                    time.sleep(10)
                     with lock:
                         start_time = float(client.recv(1024).decode())
                         if action == 'stop' or action == 'pause':
