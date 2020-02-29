@@ -91,6 +91,9 @@ if __name__ == '__main__':
     laptop_time = float(conn.recv(1024).decode())
     pi_time = time.time()
     diff_time = laptop_time - pi_time
+    print(diff_time)
+    server.close()
+    exit()
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
