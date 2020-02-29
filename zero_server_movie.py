@@ -91,12 +91,8 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    #video = np.load('lights/ana_lights_gbg.npy')
-    #video_ending = np.load('lights/ana_ending.npy')
-    with open('lights/ana_lights_gbg.pkl', 'rb') as f:
-        video = pickle.load(f)
-    # with open('lights/ana_ending.pkl', 'rb') as f:
-    #     video_ending = pickle.load(f)
+    video = np.load('lights/ana_lights_gbg.npy').tolist()
+    video_ending = np.load('lights/ana_ending.npy').tolist()
     fps = 60
 
     server = socket.socket()
