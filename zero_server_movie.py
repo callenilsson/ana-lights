@@ -40,7 +40,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                 t2 = time.time()
                 applyNumpyColors(strip, frame)
                 t3 = time.time()
-                print(t-t3, t1-t3, t2-t3)
+                print(t1-t, t2-t1, t3-t2)
                 hej = int(1/(time.time() - t))
                 #print(int(1/(time.time() - t)), 'fps')
             except:
