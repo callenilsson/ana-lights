@@ -96,50 +96,55 @@ if __name__ == '__main__':
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
-    server = socket.socket()
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(('0.0.0.0', 9091))
-    server.listen(1)
-    stripStatus(strip, [0,10,0])
-    print('Ready')
-    client, client_address = server.accept()
-
-    action = 'stop'
-    threading.Thread(target=time_thread, args=(lock, client)).start()
-    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
-
     while True:
-        action_recv = client.recv(1024).decode()
-        print(action_recv, 'lol')
-        if action_recv == 'start':
-            client.send('RPi Zero ready to start'.encode())
-            time.sleep(10)
-            with lock:
-                start_time = float(client.recv(1024).decode())
-                if action == 'stop' or action == 'pause':
-                    action = 'start'
-                    barrier.wait()
-                else:
-                    action = 'start'
+        try:
+            server = socket.socket()
+            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server.bind(('0.0.0.0', 9091))
+            server.listen(1)
+            stripStatus(strip, [0,10,0])
+            print('Ready')
+            client, client_address = server.accept()
 
-        elif action_recv == 'stop':
-            with lock:
-                action = 'stop'
+            action = 'stop'
+            threading.Thread(target=time_thread, args=(lock, client)).start()
+            threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
-        elif action_recv == 'pause':
-            with lock:
-                action = 'pause'
+            while True:
+                action_recv = client.recv(1024).decode()
+                if action_recv == '':
+                    break
+                if action_recv == 'start':
+                    client.send('RPi Zero ready to start'.encode())
+                    time.sleep(10)
+                    with lock:
+                        start_time = float(client.recv(1024).decode())
+                        if action == 'stop' or action == 'pause':
+                            action = 'start'
+                            barrier.wait()
+                        else:
+                            action = 'start'
 
-        elif action_recv == 'resume':
-            with lock:
-                action = 'start'
-                barrier.wait()
+                elif action_recv == 'stop':
+                    with lock:
+                        action = 'stop'
 
-        elif action_recv == 'ending':
-            with lock:
-                ending_start_time = time.time()
-                if action == 'stop' or action == 'pause':
-                    action = 'ending'
-                    barrier.wait()
-                else:
-                    action = 'ending'
+                elif action_recv == 'pause':
+                    with lock:
+                        action = 'pause'
+
+                elif action_recv == 'resume':
+                    with lock:
+                        action = 'start'
+                        barrier.wait()
+
+                elif action_recv == 'ending':
+                    with lock:
+                        ending_start_time = time.time()
+                        if action == 'stop' or action == 'pause':
+                            action = 'ending'
+                            barrier.wait()
+                        else:
+                            action = 'ending'
+        except:
+            continue
