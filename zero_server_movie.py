@@ -15,7 +15,7 @@ import ntplib
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, int(frame[i]))
+        strip.setPixelColor(i, frame[i])
     strip.show()
 
 def colorWipe(strip):
@@ -34,7 +34,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int(abs((get_laptop_time() - start_time)*fps))
+                true_index = int(abs((time.time() - diff_time - start_time)*fps))
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
