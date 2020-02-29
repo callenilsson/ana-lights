@@ -70,7 +70,6 @@ def time_thread(lock):
         response = c.request(client.getpeername()[0], version=4)
         with lock:
             diff_time = response.dest_time + response.offset - time.time()
-        print(diff_time)
         time.sleep(1)
 
 def get_laptop_time():
@@ -78,6 +77,10 @@ def get_laptop_time():
     return time.time() - diff_time
 
 if __name__ == '__main__':
+    global action, diff_time, start_time, ending_start_time
+    lock = threading.Lock()
+    barrier = threading.Barrier(2)
+    
     # LED strip configuration:
     LED_COUNT      = 144      # Number of LED pixels.
     LED_PIN        = 17      # GPIO pin connected to the pixels (18 uses PWM!).
@@ -87,7 +90,6 @@ if __name__ == '__main__':
     LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
     LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
     LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
-
     strip = Adafruit_NeoPixel(288, 13, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
     strip.begin()
 
@@ -95,6 +97,10 @@ if __name__ == '__main__':
     video = np.load('lights/ana_lights_gbg.npy')
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
+    
+    action = 'stop'
+    threading.Thread(target=time_thread, args=(lock,)).start()
+    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -102,19 +108,6 @@ if __name__ == '__main__':
     server.listen(1)
     print('Ready')
     client, client_address = server.accept()
-
-    # Get laptop time to sync time difference
-    global action, diff_time, start_time, ending_start_time
-    c = ntplib.NTPClient()
-    response = c.request(client.getpeername()[0], version=4)
-    diff_time = response.dest_time + response.offset - time.time()
-
-    lock = threading.Lock()
-    barrier = threading.Barrier(2)
-    
-    action = 'stop'
-    threading.Thread(target=time_thread, args=(lock,)).start()
-    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
         action_recv = client.recv(1024).decode()
