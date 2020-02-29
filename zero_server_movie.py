@@ -11,6 +11,7 @@ import zlib
 import skvideo.io
 import threading
 import pickle as p
+import ntplib
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -61,6 +62,19 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                 with lock:
                     action = 'stop'
 
+def get_diff_time(ip):
+    ntp = ntplib.NTPClient()
+    diff_sum, count = 0
+    for i in range(20):
+        response = ntp.request(ip)
+        diff = time.time() - response.tx_time
+        diff_sum += diff
+        time.sleep(0.1)
+    return diff_time / i
+
+def get_laptop_time():
+    pass
+
 if __name__ == '__main__':
     # LED strip configuration:
     LED_COUNT      = 144      # Number of LED pixels.
@@ -85,15 +99,12 @@ if __name__ == '__main__':
     server.bind(('0.0.0.0', 9091))
     server.listen(1)
     print('Ready')
-    conn, client_address = server.accept()
+    client, client_address = server.accept()
 
-    global action, diff_time, start_time, user_start_time, ending_start_time
     # Get laptop time to sync time difference
-    laptop_time = float(conn.recv(1024).decode())
-    pi_time = time.time()
-    diff_time = laptop_time - pi_time
+    global action, diff_time, start_time, user_start_time, ending_start_time
+    diff_time = get_diff_time(client.getpeername())
     print(diff_time)
-    server.close()
     exit()
 
     lock = threading.Lock()
@@ -103,13 +114,13 @@ if __name__ == '__main__':
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
-        action_recv = conn.recv(1024).decode()
+        action_recv = client.recv(1024).decode()
         if action_recv == 'start':
             with lock:
-                user_start_time = float(conn.recv(1024).decode())
+                user_start_time = float(client.recv(1024).decode())
                 msg = 'RPi Zero ready to start at ' + str(user_start_time)
-                conn.send(msg.encode())
-                start_time = float(conn.recv(1024).decode())
+                client.send(msg.encode())
+                start_time = float(client.recv(1024).decode())
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()

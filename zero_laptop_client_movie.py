@@ -25,8 +25,6 @@ def start(pies):
         song_start = text_time_to_seconds(song[1])
     else:
         song_start = text_time_to_seconds(text_input)
-    # Send timecode to RPi's where to start
-    for pi in pies: pi.send(str(song_start).encode())
     # Wait for ready responses from RPi's
     for pi in pies: print(pi.recv(1024).decode())
     # Ready
