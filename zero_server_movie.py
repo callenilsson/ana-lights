@@ -109,6 +109,7 @@ if __name__ == '__main__':
     response = c.request(client.getpeername()[0], version=4)
     
     print(response.offset)
+    exit()
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
