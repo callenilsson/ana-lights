@@ -68,14 +68,14 @@ def get_diff_time(ip):
     diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
-        diff = time.time() - (response.tx_time)
+        diff = time.time() - (response.tx_time + 10)
         diff_sum += diff
         time.sleep(0.1)
     return diff_sum / i
 
 def get_laptop_time():
     global action, diff_time, start_time, ending_start_time
-    return time.time() - diff_time
+    return time.time() + diff_time
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     # Get laptop time to sync time difference
     global action, diff_time, start_time, ending_start_time
-    diff_time = get_diff_time(client.getpeername()[0]) - 10
+    diff_time = get_diff_time(client.getpeername()[0])
     print(diff_time)
 
     lock = threading.Lock()
