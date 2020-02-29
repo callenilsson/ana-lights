@@ -35,7 +35,9 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 t = time.time()
                 true_index = int(abs((get_laptop_time() - start_time)*fps))
-                applyNumpyColors(strip, video[true_index].tolist())
+                print(true_index)
+                frame = video[true_index].tolist()
+                applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
                 #print(int(1/(time.time() - t)), 'fps')
             except:
@@ -54,7 +56,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 #t = time.time()
                 true_index = int((get_laptop_time() - ending_start_time)*fps)
-                frame = video_ending[true_index]
+                frame = video_ending[true_index].tolist()
                 applyNumpyColors(strip, frame)
                 #print(int(1/(time.time() - t)), 'fps')
             except:
@@ -66,7 +68,7 @@ def get_diff_time(ip):
     diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
-        diff = time.time() - response.tx_time
+        diff = time.time() - (response.tx_time + 2)
         diff_sum += diff
         time.sleep(0.1)
     return diff_sum / i
@@ -116,7 +118,7 @@ if __name__ == '__main__':
         if action_recv == 'start':
             with lock:
                 client.send('RPi Zero ready to start'.encode())
-                start_time = float(client.recv(1024).decode())
+                start_time = float(client.recv(1024).decode()) + 2
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()
