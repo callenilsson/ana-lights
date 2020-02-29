@@ -60,7 +60,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                 with lock:
                     action = 'stop'
 
-def time_thread(lock, client):
+def time_thread(lock):
     global action, diff_time, start_time, ending_start_time, client
     c = ntplib.NTPClient()
     while True:
@@ -97,7 +97,6 @@ if __name__ == '__main__':
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
 
-    client = None
     threading.Thread(target=time_thread, args=(lock,)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
