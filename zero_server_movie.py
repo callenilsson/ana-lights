@@ -68,7 +68,7 @@ def get_diff_time(ip):
     diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
-        diff = time.time() - (response.tx_time + 2)
+        diff = time.time() - (response.tx_time + 10)
         diff_sum += diff
         time.sleep(0.1)
     return diff_sum / i
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         if action_recv == 'start':
             with lock:
                 client.send('RPi Zero ready to start'.encode())
-                start_time = float(client.recv(1024).decode()) + 2
+                start_time = float(client.recv(1024).decode()) + 10
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()
