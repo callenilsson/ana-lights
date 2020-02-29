@@ -63,7 +63,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                 with lock:
                     action = 'stop'
 
-def time_thread(lock):
+def time_thread(lock, client):
     global action, diff_time, start_time, ending_start_time
     c = ntplib.NTPClient()
     while True:
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     global action, diff_time, start_time, ending_start_time
     lock = threading.Lock()
     barrier = threading.Barrier(2)
-    
+
     # LED strip configuration:
     LED_COUNT      = 144      # Number of LED pixels.
     LED_PIN        = 17      # GPIO pin connected to the pixels (18 uses PWM!).
@@ -97,10 +97,6 @@ if __name__ == '__main__':
     video = np.load('lights/ana_lights_gbg.npy')
     video_ending = np.load('lights/ana_ending.npy')
     fps = 30
-    
-    action = 'stop'
-    threading.Thread(target=time_thread, args=(lock,)).start()
-    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -108,6 +104,10 @@ if __name__ == '__main__':
     server.listen(1)
     print('Ready')
     client, client_address = server.accept()
+
+    action = 'stop'
+    threading.Thread(target=time_thread, args=(lock, client)).start()
+    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
         action_recv = client.recv(1024).decode()
