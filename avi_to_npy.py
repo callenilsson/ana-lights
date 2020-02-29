@@ -21,7 +21,5 @@ for i in range(len(video)):
         frame_color.append(Color(int(frame[i,0,0]), int(frame[i,0,1]), int(frame[i,0,2])))
     video_color.append(frame_color)
 
-with open('lights/ana_lights_gbg.pkl', 'wb') as f:
-    pickle.dump(video_color, f)
-
-#np.save('lights/ana_lights_gbg.npy', video_color)
+for i in range(int(len(video_color)/10000)):
+    np.save('lights/ana_lights_gbg_' + str(i) + '.npy', video_color[10000*i : 10000*(i+1)])
