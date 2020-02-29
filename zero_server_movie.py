@@ -89,7 +89,7 @@ if __name__ == '__main__':
     LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
     strip = Adafruit_NeoPixel(288, 13, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
     strip.begin()
-    stripStatus(strip, [10,10,0])
+    colorWipe()
 
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
