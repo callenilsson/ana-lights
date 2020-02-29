@@ -35,7 +35,6 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 t = time.time()
                 true_index = int(abs((get_laptop_time() - start_time)*fps))
-                print(true_index)
                 frame = video[true_index].tolist()
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -68,7 +67,7 @@ def get_diff_time(ip):
     diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
-        diff = time.time() - (response.tx_time + 2)
+        diff = time.time() - response.tx_time
         diff_sum += diff
         time.sleep(0.1)
     return diff_sum / i
@@ -106,8 +105,6 @@ if __name__ == '__main__':
     # Get laptop time to sync time difference
     global action, diff_time, start_time, ending_start_time
     diff_time = get_diff_time(client.getpeername()[0])
-    print(diff_time)
-    print(time.time(), get_laptop_time())
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
