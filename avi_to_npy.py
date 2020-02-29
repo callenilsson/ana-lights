@@ -20,4 +20,9 @@ for i in range(len(video)):
     for i in range(len(frame)):
         frame_color.append(Color(int(frame[i,0,0]), int(frame[i,0,1]), int(frame[i,0,2])))
     video_color.append(frame_color)
+
+for i in range(len(video_color)):
+    for j in range(len(video_color[0])):
+        video_color[i][j] = int(video_color[i][j])
+
 np.save('lights/ana_lights_gbg.npy', video_color)

@@ -15,12 +15,7 @@ import ntplib
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
-        t1 = time.time()
-        hej = int(frame[i])
-        t2 = time.time()
-        strip.setPixelColor(i, hej)
-        t3 = time.time()
-        print(t2-t1, t3-t2)
+        strip.setPixelColor(i, frame[i])
     strip.show()
 
 def colorWipe(strip):
