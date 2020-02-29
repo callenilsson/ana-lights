@@ -24,7 +24,7 @@ def colorWipe(strip):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, diff_time, start_time, show_start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time
     barrier.wait()
     hej = 0
     while True:
@@ -34,7 +34,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int((get_laptop_time() - show_start_time)*fps)
+                true_index = int((get_laptop_time() - start_time)*fps)
                 frame = video[true_index]
                 applyNumpyColors(strip, frame)
                 hej = int(1/(time.time() - t))
@@ -73,7 +73,7 @@ def get_diff_time(ip):
     return diff_sum / i
 
 def get_laptop_time():
-    global action, diff_time, start_time, show_start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time
     return time.time() - diff_time
 
 if __name__ == '__main__':
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     client, client_address = server.accept()
 
     # Get laptop time to sync time difference
-    global action, diff_time, start_time, show_start_time, ending_start_time
+    global action, diff_time, start_time, ending_start_time
     diff_time = get_diff_time(client.getpeername()[0])
 
     lock = threading.Lock()

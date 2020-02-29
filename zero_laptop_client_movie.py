@@ -54,11 +54,6 @@ if __name__ == "__main__":
     rpi1.connect(('192.168.0.152', 9091))
     pies = [rpi1]
 
-    # Send laptop time to pies to sync time differences
-    for pi in pies:
-        laptop_time = time.time()
-        pi.send(str(laptop_time).encode())
-
     while True:
         print('---------------')
         print('1 - Start')
