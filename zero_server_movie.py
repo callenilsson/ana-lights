@@ -68,7 +68,7 @@ def get_diff_time(ip):
     diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
-        diff = time.time() - (response.tx_time + 10)
+        diff = time.time() - (response.tx_time)
         diff_sum += diff
         time.sleep(0.1)
     return diff_sum / i
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     # Get laptop time to sync time difference
     global action, diff_time, start_time, ending_start_time
-    diff_time = get_diff_time(client.getpeername()[0])
+    diff_time = get_diff_time(client.getpeername()[0]) - 10
     print(diff_time)
 
     lock = threading.Lock()
