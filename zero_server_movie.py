@@ -103,6 +103,7 @@ if __name__ == '__main__':
 
     while True:
         try:
+            stripStatus(strip, [10,10,0])
             server = socket.socket()
             server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             server.bind(('0.0.0.0', 9091))
@@ -112,7 +113,6 @@ if __name__ == '__main__':
             client, client_address = server.accept()
 
             action = 'stop'
-            
 
             while True:
                 action_recv = client.recv(1024).decode()
@@ -151,4 +151,5 @@ if __name__ == '__main__':
                         else:
                             action = 'ending'
         except:
+            stripStatus(strip, [10,0,0])
             continue
