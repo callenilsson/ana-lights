@@ -81,6 +81,7 @@ if __name__ == '__main__':
     # fps = 30
 
     server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind(('0.0.0.0', 9091))
     server.listen(1)
     print('Ready')
