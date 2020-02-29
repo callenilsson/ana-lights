@@ -16,6 +16,7 @@ def colorWipe(strip):
     strip.show()
 
 def stripStatus(strip, color):
+    colorWipe(strip)
     for i in range(10):
         strip.setPixelColor(int(i*strip.numPixels()/10), Color(color[0], color[1], color[2]))
     strip.show()
