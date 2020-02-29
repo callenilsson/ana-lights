@@ -34,9 +34,13 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'start':
             try:
                 t = time.time()
-                true_index = int(abs((time.time() - diff_time - start_time)*fps))
+                true_index = int(abs((get_laptop_time() - start_time)*fps))
+                t1 = time.time()
                 frame = video[true_index]
+                t2 = time.time()
                 applyNumpyColors(strip, frame)
+                t3 = time.time()
+                print(t-t3, t1-t3, t2-t3)
                 hej = int(1/(time.time() - t))
                 #print(int(1/(time.time() - t)), 'fps')
             except:
