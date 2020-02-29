@@ -23,6 +23,11 @@ def colorWipe(strip):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
+def stripStatus(strip, color):
+    for i in range(10):
+        strip.setPixelColor(int(i*strip.numPixels()/10), Color(color[0], color[1], color[2]))
+    strip.show()
+
 def lights_thread(lock, barrier, strip, video, video_ending):
     global action, diff_time, start_time, ending_start_time
     barrier.wait()
@@ -92,6 +97,7 @@ if __name__ == '__main__':
     LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
     strip = Adafruit_NeoPixel(288, 13, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, 1)
     strip.begin()
+    stripStatus(strip, [10,10,0])
 
     print('Loading video...')
     video = np.load('lights/ana_lights_gbg.npy')
@@ -102,6 +108,7 @@ if __name__ == '__main__':
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind(('0.0.0.0', 9091))
     server.listen(1)
+    stripStatus(strip, [0,10,0])
     print('Ready')
     client, client_address = server.accept()
 
