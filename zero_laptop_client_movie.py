@@ -1,5 +1,7 @@
 import socket
 import time
+import numpy as np
+from sklearn.linear_model import LinearRegression
 
 def text_time_to_seconds(text_time):
     minutes = int(text_time[: text_time.index(':')])
@@ -27,10 +29,17 @@ def start(pies):
         song_start = text_time_to_seconds(text_input)
     # Wait for ready responses from RPi's
     for pi in pies: print(pi.recv(1024).decode())
+    
     # Ready
-    input('Press enter to start')
+    times = []
+    clicks = 5
+    for i in range(clicks):
+        input('Press enter to start: ' + str(clicks-i))
+        times.append(time.time())
+    model = LinearRegression().fit(np.arange(clicks).reshape(-1,1), times)
+    start_time = model.predict(clicks-1)[0]
+
     for pi in pies:
-        start_time = time.time()
         pi.send(str(start_time).encode())
 
 def stop(pies):
