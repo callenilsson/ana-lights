@@ -107,7 +107,7 @@ if __name__ == '__main__':
     global action, diff_time, start_time, ending_start_time
     diff_time = get_diff_time(client.getpeername()[0])
     print(diff_time)
-    print(get_laptop_time())
+    print(time.time(), get_laptop_time())
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
