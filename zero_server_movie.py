@@ -90,11 +90,10 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    video = []
+    video_chunks = []
     for i in range(5):
-        video += np.load('lights/ana_lights_gbg_' + str(i) + '.npy').tolist()
+        video_chunks.append(np.load('lights/ana_lights_gbg_' + str(i) + '.npy').tolist())
     video_ending = np.load('lights/ana_ending.npy').tolist()
-    print(len(video))
     fps = 30
 
     server = socket.socket()
