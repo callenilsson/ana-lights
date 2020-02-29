@@ -107,9 +107,8 @@ if __name__ == '__main__':
     #diff_time = get_diff_time(client.getpeername()[0])
     c = ntplib.NTPClient()
     response = c.request(client.getpeername()[0], version=4)
-    
-    print(response.dest_time + response.offset, time.time())
-    exit()
+    diff_time = response.dest_time + response.offset - time.time()
+    print(diff_time)
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
