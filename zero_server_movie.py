@@ -64,7 +64,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
 
 def get_diff_time(ip):
     ntp = ntplib.NTPClient()
-    diff_sum, count = 0
+    diff_sum = 0
     for i in range(20):
         response = ntp.request(ip)
         diff = time.time() - response.tx_time
