@@ -1,16 +1,8 @@
 import time
 from rpi_ws281x import *
-import numpy as np
-import math
-import random
 import socket
-import json
 import numpy as np
-import time
-import zlib
-import skvideo.io
 import threading
-import pickle
 import ntplib
 
 def applyNumpyColors(strip, frame):
