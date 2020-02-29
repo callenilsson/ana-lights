@@ -10,7 +10,7 @@ import time
 import zlib
 import skvideo.io
 import threading
-import pickle as p
+import pickle
 import ntplib
 
 def applyNumpyColors(strip, frame):
