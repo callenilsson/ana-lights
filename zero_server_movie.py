@@ -75,7 +75,7 @@ def get_diff_time(ip):
 
 def get_laptop_time():
     global action, diff_time, start_time, ending_start_time
-    return time.time() + diff_time
+    return time.time() - diff_time
 
 if __name__ == '__main__':
     # LED strip configuration:
@@ -107,6 +107,7 @@ if __name__ == '__main__':
     global action, diff_time, start_time, ending_start_time
     diff_time = get_diff_time(client.getpeername()[0])
     print(diff_time)
+    print(get_laptop_time())
 
     lock = threading.Lock()
     barrier = threading.Barrier(2)
