@@ -107,12 +107,16 @@ if __name__ == '__main__':
             client, client_address = server.accept()
 
             action = 'stop'
-            threading.Thread(target=time_thread, args=(lock, client)).start()
-            threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
+            t1 = threading.Thread(target=time_thread, args=(lock, client))
+            t1.start()
+            t2 = threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending))
+            t2.start()
 
             while True:
                 action_recv = client.recv(1024).decode()
                 if action_recv == '':
+                    t1.stop()
+                    t2.stop()
                     break
                 if action_recv == 'start':
                     client.send('RPi Zero ready to start'.encode())
@@ -147,4 +151,5 @@ if __name__ == '__main__':
                         else:
                             action = 'ending'
         except:
-            continue
+            t1.stop()
+            t2.stop()
