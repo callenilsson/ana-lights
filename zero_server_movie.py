@@ -35,7 +35,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             try:
                 t = time.time()
                 true_index = int(abs((get_laptop_time() - start_time)*fps))
-                applyNumpyColors(strip, video[true_index])
+                applyNumpyColors(strip, video[true_index].to_list())
                 hej = int(1/(time.time() - t))
                 #print(int(1/(time.time() - t)), 'fps')
             except:
@@ -90,13 +90,9 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    video_chunks = []
-    for i in range(5):
-        print(i)
-        video_chunks.append(np.load('lights/ana_lights_gbg_' + str(i) + '.npy').tolist())
-    video_ending = np.load('lights/ana_ending.npy').tolist()
+    video = np.load('lights/ana_lights_gbg.npy')
+    video_ending = np.load('lights/ana_ending.npy')
     fps = 30
-    exit()
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
