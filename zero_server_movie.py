@@ -70,7 +70,7 @@ def get_diff_time(ip):
         diff = time.time() - response.tx_time
         diff_sum += diff
         time.sleep(0.1)
-    return diff_time / i
+    return diff_sum / i
 
 def get_laptop_time():
     pass
