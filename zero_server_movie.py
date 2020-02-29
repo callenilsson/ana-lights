@@ -90,9 +90,11 @@ if __name__ == '__main__':
     strip.begin()
 
     print('Loading video...')
-    video = np.load('lights/ana_lights_gbg_0.npy').tolist()
+    video = []
+    for i in range(len(5)):
+        video += np.load('lights/ana_lights_gbg_' + str(i) '.npy').tolist()
     video_ending = np.load('lights/ana_ending.npy').tolist()
-    fps = 60
+    fps = 30
 
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
