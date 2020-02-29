@@ -64,6 +64,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                     action = 'stop'
 
 def time_thread(lock):
+    global action, diff_time, start_time, ending_start_time
     c = ntplib.NTPClient()
     while True:
         response = c.request(client.getpeername()[0], version=4)
