@@ -120,7 +120,7 @@ if __name__ == '__main__':
         if action_recv == 'start':
             with lock:
                 client.send('RPi Zero ready to start'.encode())
-                start_time = float(client.recv(1024).decode()) + 4
+                start_time = float(client.recv(1024).decode())
                 if action == 'stop' or action == 'pause':
                     action = 'start'
                     barrier.wait()
