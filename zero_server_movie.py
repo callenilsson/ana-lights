@@ -63,7 +63,6 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                     action = 'stop'
 
 def get_diff_time(ip):
-    print(ip)
     ntp = ntplib.NTPClient()
     diff_sum = 0
     for i in range(20):
@@ -104,7 +103,7 @@ if __name__ == '__main__':
 
     # Get laptop time to sync time difference
     global action, diff_time, start_time, user_start_time, ending_start_time
-    diff_time = get_diff_time(client.getpeername())
+    diff_time = get_diff_time(client.getpeername()[0])
     print(diff_time)
     exit()
 
