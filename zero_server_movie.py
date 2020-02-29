@@ -108,7 +108,7 @@ if __name__ == '__main__':
     c = ntplib.NTPClient()
     response = c.request(client.getpeername()[0], version=4)
     
-    print(response.offset, response.delay, response.root_delay)
+    print(response.dest_time + response.offset, time.time())
     exit()
 
     lock = threading.Lock()
