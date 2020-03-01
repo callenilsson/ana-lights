@@ -97,8 +97,8 @@ if __name__ == '__main__':
     colorWipe(strip)
 
     print('Loading video...')
-    video = np.load('ana-lights/lights/ana_lights_gbg.npy')
-    video_ending = np.load('ana-lights/lights/ana_ending.npy')
+    video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
+    video_ending = np.load('/home/pi/ana-lights/lights/ana_ending.npy')
     fps = 30
 
     client = None
