@@ -103,53 +103,50 @@ if __name__ == '__main__':
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
 
     while True:
-        try:
-            stripStatus(strip, [10,10,0])
-            server = socket.socket()
-            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            server.bind(('0.0.0.0', 9091))
-            server.listen(1)
-            stripStatus(strip, [0,10,0])
-            print('Ready')
-            client, client_address = server.accept()
+        stripStatus(strip, [10,10,0])
+        time.sleep(1)
+        server = socket.socket()
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(('0.0.0.0', 9091))
+        server.listen(1)
+        stripStatus(strip, [0,10,0])
+        print('Ready')
+        client, client_address = server.accept()
 
-            action = 'stop'
+        action = 'stop'
 
-            while True:
-                action_recv = client.recv(1024).decode()
-                if action_recv == '':
-                    break
-                if action_recv == 'start':
-                    client.send('RPi Zero ready to start'.encode())
-                    with lock:
-                        start_time = float(client.recv(1024).decode())
-                        if action == 'stop' or action == 'pause':
-                            action = 'start'
-                            barrier.wait()
-                        else:
-                            action = 'start'
-
-                elif action_recv == 'stop':
-                    with lock:
-                        action = 'stop'
-
-                elif action_recv == 'pause':
-                    with lock:
-                        action = 'pause'
-
-                elif action_recv == 'resume':
-                    with lock:
+        while True:
+            action_recv = client.recv(1024).decode()
+            if action_recv == '':
+                break
+            if action_recv == 'start':
+                client.send('RPi Zero ready to start'.encode())
+                with lock:
+                    start_time = float(client.recv(1024).decode())
+                    if action == 'stop' or action == 'pause':
                         action = 'start'
                         barrier.wait()
+                    else:
+                        action = 'start'
 
-                elif action_recv == 'ending':
-                    with lock:
-                        ending_start_time = time.time()
-                        if action == 'stop' or action == 'pause':
-                            action = 'ending'
-                            barrier.wait()
-                        else:
-                            action = 'ending'
-        except:
-            stripStatus(strip, [10,0,0])
-            continue
+            elif action_recv == 'stop':
+                with lock:
+                    action = 'stop'
+
+            elif action_recv == 'pause':
+                with lock:
+                    action = 'pause'
+
+            elif action_recv == 'resume':
+                with lock:
+                    action = 'start'
+                    barrier.wait()
+
+            elif action_recv == 'ending':
+                with lock:
+                    ending_start_time = time.time()
+                    if action == 'stop' or action == 'pause':
+                        action = 'ending'
+                        barrier.wait()
+                    else:
+                        action = 'ending'
