@@ -72,7 +72,6 @@ def time_thread(lock):
                     diff_time = response.dest_time + response.offset - time.time()
         except Exception as e:
             print(e)
-        print('running')
         time.sleep(1)
 
 def get_laptop_time():
