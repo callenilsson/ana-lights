@@ -112,7 +112,7 @@ if __name__ == '__main__':
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('0.0.0.0', 9091))
         server.listen(1)
-        stripStatus(strip, [0,10,0])
+        stripStatus(strip, [10,0,0])
         print('Ready')
         client, client_address = server.accept()
 
