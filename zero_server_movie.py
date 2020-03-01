@@ -1,5 +1,5 @@
 import time
-from rpi_ws281x import *
+from neopixel import *
 import socket
 import numpy as np
 import threading
