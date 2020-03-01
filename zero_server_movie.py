@@ -65,10 +65,14 @@ def time_thread(lock):
     global action, diff_time, start_time, ending_start_time, client
     c = ntplib.NTPClient()
     while True:
-        if client:
-            response = c.request(client.getpeername()[0], version=4)
-            with lock:
-                diff_time = response.dest_time + response.offset - time.time()
+        try:
+            if client:
+                response = c.request(client.getpeername()[0], version=4)
+                with lock:
+                    diff_time = response.dest_time + response.offset - time.time()
+        except Exception as e:
+            print(e)
+        print('running')
         time.sleep(1)
 
 def get_laptop_time():
