@@ -22,7 +22,7 @@ def stripStatus(strip, color):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, diff_time, start_time, ending_start_time, client
+    global action, diff_time, initial_offset, start_time, ending_start_time, client
     barrier.wait()
     hej = 0
     while True:
@@ -53,7 +53,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'ending':
             try:
                 #t = time.time()
-                true_index = int((get_laptop_time() - ending_start_time)*fps)
+                true_index = int(abs((get_laptop_time() - ending_start_time)*fps))
                 frame = video_ending[true_index].tolist()
                 applyNumpyColors(strip, frame)
                 #print(int(1/(time.time() - t)), 'fps')
@@ -62,12 +62,16 @@ def lights_thread(lock, barrier, strip, video, video_ending):
                     action = 'stop'
 
 def time_thread(lock):
-    global action, diff_time, start_time, ending_start_time, client
+    global action, diff_time, initial_offset, start_time, ending_start_time, client
     c = ntplib.NTPClient()
+    do_once = True
     while True:
         try:
             if client:
                 response = c.request(client.getpeername()[0], version=4)
+                if do_once:
+                    initial_offset = response.offset
+                    do_once = False
                 with lock:
                     diff_time = response.dest_time + response.offset - time.time()
         except Exception as e:
@@ -75,11 +79,11 @@ def time_thread(lock):
         time.sleep(1)
 
 def get_laptop_time():
-    global action, diff_time, start_time, ending_start_time, client
-    return time.time() - diff_time
+    global action, diff_time, initial_offset, start_time, ending_start_time, client
+    return time.time() + initial_offset - diff_time
 
 if __name__ == '__main__':
-    global action, diff_time, start_time, ending_start_time, client
+    global action, diff_time, initial_offset, start_time, ending_start_time, client
     lock = threading.Lock()
     barrier = threading.Barrier(2)
 
@@ -100,6 +104,7 @@ if __name__ == '__main__':
     video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
     video_ending = np.load('/home/pi/ana-lights/lights/ana_ending.npy')
     fps = 30
+    initial_offset = 0
 
     client = None
     threading.Thread(target=time_thread, args=(lock,)).start()

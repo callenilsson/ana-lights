@@ -60,7 +60,7 @@ def exitt(pies):
 
 if __name__ == "__main__":
     rpi1 = socket.socket()
-    rpi1.connect(('192.168.0.152', 9091))
+    rpi1.connect(('192.168.1.102', 9091))
     pies = [rpi1]
 
     while True:
