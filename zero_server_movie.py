@@ -21,6 +21,11 @@ def stripStatus(strip, color):
         strip.setPixelColor(int(i*strip.numPixels()/10), Color(color[0], color[1], color[2]))
     strip.show()
 
+def mapSelect(strip, color):
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, Color(color[0], color[1], color[2]))
+    strip.show()
+
 def lights_thread(lock, barrier, strip, video, video_ending):
     global action, diff_time, initial_offset, start_time, ending_start_time, client
     barrier.wait()
@@ -60,6 +65,9 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             except:
                 with lock:
                     action = 'stop'
+
+        if get_action == 'map_select':
+            mapSelect(strip, [10,10,10])
 
 def time_thread(lock):
     global action, diff_time, initial_offset, start_time, ending_start_time, client
@@ -161,3 +169,11 @@ if __name__ == '__main__':
                         barrier.wait()
                     else:
                         action = 'ending'
+
+            elif action_recv == 'mapping':
+                with lock:
+                    action = 'stop'
+                select = client.recv(1024).decode()
+                if select == 'map_select':
+                    with lock:
+                        action = 'map_select'
