@@ -52,6 +52,11 @@ def lights_thread(lock, barrier, strip, video, video_ending):
             colorWipe(strip)
             barrier.wait()
 
+        elif get_action == 'ready':
+            colorWipe(strip)
+            stripStatus(strip, [10,0,0])
+            barrier.wait()
+
         elif get_action == 'pause':
             barrier.wait()
 
@@ -142,7 +147,7 @@ if __name__ == '__main__':
                 start_time_temp = float(client.recv(1024).decode())
                 with lock:
                     start_time = start_time_temp
-                    if action == 'stop' or action == 'pause':
+                    if action == 'stop' or action == 'pause' or action == 'ready':
                         action = 'start'
                         barrier.wait()
                     else:
@@ -180,4 +185,4 @@ if __name__ == '__main__':
                         barrier.wait()
                     position = client.recv(1024).decode()
                     with lock:
-                        action = 'stop'
+                        action = 'ready'
