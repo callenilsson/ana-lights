@@ -91,9 +91,12 @@ def time_thread(lock):
                 print('Laptop time:', get_laptop_time())
                 print('Dest time', response.dest_time)
                 print('Offset', response.offset)
+                print('Recv time', response.recv_time)
+                print('TX time', response.tx_time)
+                print('Orig time', response.orig_time)
+                print('Ref time', response.ref_time)
                 print('Time', time.time())
                 print('Start time', start_time)
-                print(response)
                 print()
         except Exception as e:
             print(e)
