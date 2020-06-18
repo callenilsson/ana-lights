@@ -175,5 +175,6 @@ if __name__ == '__main__':
                     action = 'stop'
                 select = client.recv(1024).decode()
                 if select == 'map_select':
+                    position = client.recv(1024).decode()
                     with lock:
                         action = 'map_select'
