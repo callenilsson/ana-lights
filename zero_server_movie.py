@@ -88,6 +88,11 @@ def time_thread(lock):
                     do_once = False
                 with lock:
                     diff_time = response.dest_time + response.offset - time.time()
+                print('Laptop time:', get_laptop_time())
+                print('Dest time', response.dest_time)
+                print('Offset', response.offset)
+                print('Time', time.time())
+                print('Start time', start_time)
         except Exception as e:
             print(e)
         time.sleep(1)
