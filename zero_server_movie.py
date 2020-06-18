@@ -4,6 +4,7 @@ import socket
 import numpy as np
 import threading
 import ntplib
+import json
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
