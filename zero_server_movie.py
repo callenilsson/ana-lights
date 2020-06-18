@@ -93,6 +93,8 @@ def time_thread(lock):
                 print('Offset', response.offset)
                 print('Time', time.time())
                 print('Start time', start_time)
+                print(response)
+                print()
         except Exception as e:
             print(e)
         time.sleep(1)
