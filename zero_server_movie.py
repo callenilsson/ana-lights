@@ -114,7 +114,12 @@ if __name__ == '__main__':
     colorWipe(strip)
 
     print('Loading video...')
-    video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
+    with open('/home/pi/ana-lights/mapping.json', 'r') as openfile:
+        mapping = json.load(openfile)
+    with open('/home/pi/ana-lights/position.json', 'r') as openfile:
+        position = json.load(openfile)
+    #video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
+    video = np.load(mapping[position['position']])
     video_ending = np.load('/home/pi/ana-lights/lights/ana_ending.npy')
     fps = 30
     initial_offset = 0
@@ -184,5 +189,7 @@ if __name__ == '__main__':
                         action = 'map_select'
                         barrier.wait()
                     position = client.recv(1024).decode()
+                    with open("/home/pi/ana-lights/position.json", "w") as outfile: 
+                        outfile.write({'position': position}) 
                     with lock:
                         action = 'ready'
