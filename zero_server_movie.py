@@ -191,6 +191,6 @@ if __name__ == '__main__':
                         barrier.wait()
                     position = client.recv(1024).decode()
                     with open("/home/pi/ana-lights/position.json", "w") as outfile: 
-                        outfile.write({'position': position}) 
+                        outfile.write(json.dumps({'position': position})) 
                     with lock:
                         action = 'ready'
