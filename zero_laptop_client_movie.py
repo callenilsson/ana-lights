@@ -88,7 +88,7 @@ def connect_pies(found_pies):
     pies = []
     for found_pie in found_pies:
         rpi = socket.socket()
-        rpi.connect((found_pie['ip'], 9091))
+        rpi.connect((found_pie['ip'], 9092))
         pies.append(rpi)
     return pies
 
