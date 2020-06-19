@@ -104,6 +104,7 @@ def get_laptop_time():
     #return time.time() + initial_offset - diff_time
 
 def stream_thread(lock):
+    print('Starting stream thread...')
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -112,8 +113,11 @@ def stream_thread(lock):
     stream_client, stream_client_address = server.accept()
 
     while True:
-        data = stream_client.recv(4096)
-        print(data)
+        try:
+            data = stream_client.recv(4096)
+        except:
+            print('Connection lost, shutting off stream thread...')
+            break
         stream_client.send('next'.encode())
         with lock:
             stream_data = pickle.loads(data)
@@ -151,11 +155,11 @@ if __name__ == '__main__':
     client = None
     threading.Thread(target=time_thread, args=(lock,)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
-    threading.Thread(target=stream_thread, args=(lock,)).start()
 
     while True:
         stripStatus(strip, [10,10,0])
         time.sleep(1)
+        threading.Thread(target=stream_thread, args=(lock,)).start()
         server = socket.socket()
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('0.0.0.0', 9100))
