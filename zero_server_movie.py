@@ -116,7 +116,6 @@ def stream_thread(lock):
         stream_client.send('next'.encode())
         with lock:
             stream_data = pickle.loads(data)
-        print('hej')
 
 if __name__ == '__main__':
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data

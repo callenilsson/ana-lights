@@ -67,8 +67,9 @@ def mapping(pies):
         position = input('Select rpi position: ')
         pi.send(position.encode())
 
-def exitt(pies):
+def exitt(pies, stream_pies):
     for pi in pies: pi.close()
+    for pi in stream_pies: pi.close()
     exit()
 
 def stream(pies):
@@ -94,7 +95,7 @@ def connect_pies(found_pies, port):
     pies = []
     for found_pie in found_pies:
         rpi = socket.socket()
-        rpi.connect((found_pie['ip'], 9092))
+        rpi.connect((found_pie['ip'], port))
         pies.append(rpi)
     return pies
 
@@ -105,9 +106,7 @@ def Color(red, green, blue, white=0):
     """
     return (white << 24) | (red << 16) | (green << 8) | blue
 
-def stream_thread(found_pies):
-    pies = connect_pies(found_pies, 9094)
-
+def stream_thread(stream_pies):
     mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
     sct = mss.mss()
     while True:
@@ -119,16 +118,17 @@ def stream_thread(found_pies):
             img_color.append(Color(int(img[i,1]), int(img[i,2]), int(img[i,0])))
 
         data = pickle.dumps(img_color)
-        for pi in pies: pi.send(data)
-        for pi in pies: pi.recv(1024).decode()
+        for pi in stream_pies: pi.send(data)
+        for pi in stream_pies: pi.recv(1024).decode()
 
-        print(int(1/(time.time()-t)), 'fps')
+        #print(int(1/(time.time()-t)), 'fps')
 
 if __name__ == "__main__":
     print('Scanning for pies...')
     found_pies = get_pies_on_network()
     pies = connect_pies(found_pies, 9091)
-    threading.Thread(target=stream_thread, args=(found_pies,)).start()
+    stream_pies = connect_pies(found_pies, 9094)
+    threading.Thread(target=stream_thread, args=(stream_pies,)).start()
 
     while True:
         print('---------------')
@@ -149,4 +149,4 @@ if __name__ == "__main__":
         if action == '5': ending(pies)
         if action == '6': mapping(pies)
         if action == '7': stream(pies)
-        if action == '8': exitt(pies)
+        if action == '8': exitt(pies, stream_pies)
