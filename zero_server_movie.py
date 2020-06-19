@@ -113,6 +113,7 @@ def stream_thread(lock):
 
     while True:
         data = stream_client.recv(4096)
+        print(data)
         stream_client.send('next'.encode())
         with lock:
             stream_data = pickle.loads(data)

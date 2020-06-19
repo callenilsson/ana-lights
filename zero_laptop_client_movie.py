@@ -126,8 +126,8 @@ def stream_thread(stream_pies):
 if __name__ == "__main__":
     print('Scanning for pies...')
     found_pies = get_pies_on_network()
-    pies = connect_pies(found_pies, 9093)
-    stream_pies = connect_pies(found_pies, 9096)
+    pies = connect_pies(found_pies, 9100)
+    stream_pies = connect_pies(found_pies, 9200)
     threading.Thread(target=stream_thread, args=(stream_pies,)).start()
 
     while True:
