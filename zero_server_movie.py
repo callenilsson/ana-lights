@@ -107,7 +107,7 @@ def stream_thread(lock):
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
     server = socket.socket()
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(('0.0.0.0', 9094))
+    server.bind(('0.0.0.0', 9095))
     server.listen(1)
     stream_client, stream_client_address = server.accept()
 
@@ -157,7 +157,7 @@ if __name__ == '__main__':
         time.sleep(1)
         server = socket.socket()
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(('0.0.0.0', 9091))
+        server.bind(('0.0.0.0', 9092))
         server.listen(1)
         stripStatus(strip, [10,0,0])
         print('Ready')
