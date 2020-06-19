@@ -5,6 +5,7 @@ import numpy as np
 import threading
 import ntplib
 import json
+import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
