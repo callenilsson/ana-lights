@@ -28,7 +28,7 @@ def mapSelect(strip, color):
     strip.show()
 
 def lights_thread(lock, barrier, strip, video, video_ending):
-    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset
+    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
     barrier.wait()
     hej = 0
     while True:
@@ -74,9 +74,13 @@ def lights_thread(lock, barrier, strip, video, video_ending):
 
         if get_action == 'map_select':
             mapSelect(strip, [10,10,10])
+        
+        if get_action == 'stream':
+            with lock:
+                applyNumpyColors(strip, frame)
 
 def time_thread(lock):
-    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset
+    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
     c = ntplib.NTPClient()
     do_once = True
     while True:
@@ -98,8 +102,22 @@ def get_laptop_time():
     return time.time() + offset
     #return time.time() + initial_offset - diff_time
 
+def stream_thread(lock):
+    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
+    server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind(('0.0.0.0', 9095))
+    server.listen(1)
+    stream_client, stream_client_address = server.accept()
+
+    while True:
+        data = conn.recv(4096)
+        conn.send('next'.encode())
+        with lock:
+            stream_data = pickle.loads(data)
+
 if __name__ == '__main__':
-    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset
+    global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
     lock = threading.Lock()
     barrier = threading.Barrier(2)
 
@@ -131,6 +149,7 @@ if __name__ == '__main__':
     client = None
     threading.Thread(target=time_thread, args=(lock,)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video, video_ending)).start()
+    threading.Thread(target=stream_thread, args=(lock,)).start()
 
     while True:
         stripStatus(strip, [10,10,0])
@@ -147,6 +166,7 @@ if __name__ == '__main__':
 
         while True:
             action_recv = client.recv(1024).decode()
+            
             if action_recv == '':
                 with lock:
                     action = 'stop'
@@ -197,3 +217,11 @@ if __name__ == '__main__':
                         outfile.write(json.dumps({'position': position})) 
                     with lock:
                         action = 'ready'
+
+            elif action_recv == 'stream':
+                with lock:
+                    if action == 'stop' or action == 'pause' or action == 'ready':
+                        action = 'stream'
+                        barrier.wait()
+                    else:
+                        action = 'stream'

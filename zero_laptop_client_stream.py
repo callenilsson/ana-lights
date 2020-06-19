@@ -16,7 +16,7 @@ def Color(red, green, blue, white=0):
     return (white << 24) | (red << 16) | (green << 8) | blue
 
 rpi = socket.socket()
-rpi.connect(('192.168.0.152', 9090))
+rpi.connect(('192.168.1.135', 9090))
 
 mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
 sct = mss.mss()

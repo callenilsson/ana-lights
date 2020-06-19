@@ -3,6 +3,9 @@ import time
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import nmap
+import pickle
+import mss
+import threading
 
 def text_time_to_seconds(text_time):
     minutes = int(text_time[: text_time.index(':')])
@@ -68,6 +71,9 @@ def exitt(pies):
     for pi in pies: pi.close()
     exit()
 
+def stream(pies):
+    for pi in pies: pi.send('stream'.encode())
+
 def get_pies_on_network():
     nm = nmap.PortScanner()
     nm.scan(hosts='192.168.1.0/24', arguments='-sP')
@@ -84,17 +90,45 @@ def get_pies_on_network():
             })
     return found_pies
             
-def connect_pies(found_pies):
+def connect_pies(found_pies, port):
     pies = []
     for found_pie in found_pies:
         rpi = socket.socket()
-        rpi.connect((found_pie['ip'], 9091))
+        rpi.connect((found_pie['ip'], 9092))
         pies.append(rpi)
     return pies
 
+def Color(red, green, blue, white=0):
+    """Convert the provided red, green, blue color to a 24-bit color value.
+    Each color component should be a value 0-255 where 0 is the lowest intensity
+    and 255 is the highest intensity.
+    """
+    return (white << 24) | (red << 16) | (green << 8) | blue
+
+def stream_thread(found_pies):
+    pies = connect_pies(found_pies, 9095)
+
+    mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
+    sct = mss.mss()
+    while True:
+        t = time.time()
+        img = np.asarray(sct.grab(mon))[:,0,:3]
+
+        img_color = []
+        for i in range(len(img)):
+            img_color.append(Color(int(img[i,1]), int(img[i,2]), int(img[i,0])))
+
+        data = pickle.dumps(img_color)
+        for pi in pies: pi.send(data)
+        for pi in pies: pi.recv(1024).decode()
+
+        print(int(1/(time.time()-t)), 'fps')
+
 if __name__ == "__main__":
+    print('Scanning for pies...')
     found_pies = get_pies_on_network()
-    pies = connect_pies(found_pies)
+    pies = connect_pies(found_pies, 9092)
+    threading.Thread(target=stream_thread, args=(lock,)).start()
 
     while True:
         print('---------------')
@@ -104,7 +138,8 @@ if __name__ == "__main__":
         print('4 - Resume')
         print('5 - Ending')
         print('6 - Mapping')
-        print('7 - Exit')
+        print('7 - Stream')
+        print('8 - Exit')
         action = input('Select an action to perform: ')
 
         if action == '1': start(pies)
@@ -113,4 +148,5 @@ if __name__ == "__main__":
         if action == '4': resume(pies)
         if action == '5': ending(pies)
         if action == '6': mapping(pies)
-        if action == '7': exitt(pies)
+        if action == '7': stream(pies)
+        if action == '8': exitt(pies)
