@@ -128,7 +128,7 @@ if __name__ == "__main__":
     print('Scanning for pies...')
     found_pies = get_pies_on_network()
     pies = connect_pies(found_pies, 9092)
-    threading.Thread(target=stream_thread, args=(lock,)).start()
+    threading.Thread(target=stream_thread, args=(found_pies,)).start()
 
     while True:
         print('---------------')

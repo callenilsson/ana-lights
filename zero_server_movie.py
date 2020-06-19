@@ -5,6 +5,7 @@ import numpy as np
 import threading
 import ntplib
 import json
+import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -111,8 +112,8 @@ def stream_thread(lock):
     stream_client, stream_client_address = server.accept()
 
     while True:
-        data = conn.recv(4096)
-        conn.send('next'.encode())
+        data = stream_client.recv(4096)
+        stream_client.send('next'.encode())
         with lock:
             stream_data = pickle.loads(data)
 
