@@ -75,6 +75,12 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'map_select':
             mapSelect(strip, [10,10,10])
 
+        if get_action == 'stream':
+            data = conn.recv(4096)
+            conn.send('next'.encode())
+            img_color = pickle.loads(data)
+            applyNumpyColors(strip, img_color)
+
 def time_thread(lock):
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset
     c = ntplib.NTPClient()
@@ -89,17 +95,6 @@ def time_thread(lock):
                 with lock:
                     diff_time = response.dest_time + response.offset - time.time()
                     offset = response.offset
-                # print('Laptop time:', get_laptop_time())
-                # print('Dest time', response.dest_time)
-                # print('Offset1', response.offset)
-                # print('Offset2', (response.recv_time - response.orig_time + response.tx_time - response.dest_time) / 2)
-                # print('Recv time', response.recv_time)
-                # print('TX time', response.tx_time)
-                # print('Orig time', response.orig_time)
-                # print('Ref time', response.ref_time)
-                # print('Time', time.time())
-                # print('Start time', start_time)
-                # print()
         except Exception as e:
             print(e)
         time.sleep(1)
@@ -157,7 +152,9 @@ if __name__ == '__main__':
         action = 'stop'
 
         while True:
-            action_recv = client.recv(1024).decode()
+            action_recv = client.recv(4096)#.decode()
+            img_color = pickle.loads(action_recv)
+            print(action_recv)
             if action_recv == '':
                 with lock:
                     action = 'stop'
@@ -189,7 +186,7 @@ if __name__ == '__main__':
             elif action_recv == 'ending':
                 with lock:
                     ending_start_time = time.time()
-                    if action == 'stop' or action == 'pause':
+                    if action == 'stop' or action == 'pause' or action == 'ready':
                         action = 'ending'
                         barrier.wait()
                     else:
@@ -208,3 +205,10 @@ if __name__ == '__main__':
                         outfile.write(json.dumps({'position': position})) 
                     with lock:
                         action = 'ready'
+
+            elif action_recv == 'stream':
+                if action == 'stop' or action == 'pause' or action == 'ready':
+                        action = 'stream'
+                        barrier.wait()
+                    else:
+                        action = 'stream'
