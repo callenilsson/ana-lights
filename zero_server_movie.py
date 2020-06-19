@@ -115,10 +115,10 @@ def stream_thread(lock):
     while True:
         try:
             data = stream_client.recv(4096)
+            stream_client.send('next'.encode())
         except:
             print('Connection lost, shutting off stream thread...')
             break
-        stream_client.send('next'.encode())
         with lock:
             stream_data = pickle.loads(data)
 
