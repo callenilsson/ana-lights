@@ -5,7 +5,6 @@ import numpy as np
 import threading
 import ntplib
 import json
-import pickle
 
 def applyNumpyColors(strip, frame):
     for i in range(strip.numPixels()):
@@ -76,12 +75,6 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         if get_action == 'map_select':
             mapSelect(strip, [10,10,10])
 
-        if get_action == 'stream':
-            data = conn.recv(4096)
-            conn.send('next'.encode())
-            img_color = pickle.loads(data)
-            applyNumpyColors(strip, img_color)
-
 def time_thread(lock):
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset
     c = ntplib.NTPClient()
@@ -144,7 +137,7 @@ if __name__ == '__main__':
         time.sleep(1)
         server = socket.socket()
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(('0.0.0.0', 9091))
+        server.bind(('0.0.0.0', 9092))
         server.listen(1)
         stripStatus(strip, [10,0,0])
         print('Ready')
@@ -153,9 +146,7 @@ if __name__ == '__main__':
         action = 'stop'
 
         while True:
-            action_recv = client.recv(4096)#.decode()
-            img_color = pickle.loads(action_recv)
-            print(action_recv)
+            action_recv = client.recv(1024).decode()
             if action_recv == '':
                 with lock:
                     action = 'stop'
@@ -206,10 +197,3 @@ if __name__ == '__main__':
                         outfile.write(json.dumps({'position': position})) 
                     with lock:
                         action = 'ready'
-
-            elif action_recv == 'stream':
-                if action == 'stop' or action == 'pause' or action == 'ready':
-                    action = 'stream'
-                    barrier.wait()
-                else:
-                    action = 'stream'
