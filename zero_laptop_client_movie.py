@@ -106,7 +106,7 @@ def Color(red, green, blue, white=0):
     return (white << 24) | (red << 16) | (green << 8) | blue
 
 def stream_thread(found_pies):
-    pies = connect_pies(found_pies, 9095)
+    pies = connect_pies(found_pies, 9094)
 
     mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
     sct = mss.mss()
@@ -127,7 +127,7 @@ def stream_thread(found_pies):
 if __name__ == "__main__":
     print('Scanning for pies...')
     found_pies = get_pies_on_network()
-    pies = connect_pies(found_pies, 9092)
+    pies = connect_pies(found_pies, 9091)
     threading.Thread(target=stream_thread, args=(found_pies,)).start()
 
     while True:

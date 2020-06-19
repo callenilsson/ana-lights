@@ -78,7 +78,7 @@ def lights_thread(lock, barrier, strip, video, video_ending):
         
         if get_action == 'stream':
             with lock:
-                applyNumpyColors(strip, frame)
+                applyNumpyColors(strip, stream_data)
 
 def time_thread(lock):
     global action, diff_time, initial_offset, start_time, ending_start_time, client, offset, stream_data
