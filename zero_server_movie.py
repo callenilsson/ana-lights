@@ -146,9 +146,9 @@ if __name__ == '__main__':
     with open('/home/pi/ana-lights/position.json', 'r') as openfile:
         position = json.load(openfile)
     #video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
-    video = np.load(mapping[position['position']])
+    video = np.load(mapping[position['position']])[::2][:,::-1]
     video_ending = np.load('/home/pi/ana-lights/lights/ana_ending.npy')
-    fps = 60
+    fps = 30
     initial_offset = 0
     offset = 0
 
