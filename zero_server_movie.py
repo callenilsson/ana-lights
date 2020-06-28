@@ -148,7 +148,7 @@ if __name__ == '__main__':
     #video = np.load('/home/pi/ana-lights/lights/ana_lights_gbg.npy')
     video = np.load(mapping[position['position']])
     video_ending = np.load('/home/pi/ana-lights/lights/ana_ending.npy')
-    fps = 30
+    fps = 60
     initial_offset = 0
     offset = 0
 
