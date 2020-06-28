@@ -9,16 +9,22 @@ def Color(red, green, blue, white=0):
     """
     return (white << 24) | (red << 16) | (green << 8) | blue
 
-video = skvideo.io.vread('videos/ana_lights_gbg6.avi')[:, :288, :1, :]
+video_name = 'starlight.avi'
+video = skvideo.io.vread('videos/' + video_name)[:, ::2, :, :]
+video = video[:, :144, :, :]
 video = video.astype(np.uint8)
     
-video_color = []
-for i in range(len(video)):
-    if i % 1000 == 0: print(i, '/', len(video))
-    frame = video[i]
-    frame_color = []
-    for i in range(len(frame)):
-        frame_color.append(Color(int(frame[i,0,1]), int(frame[i,0,0]), int(frame[i,0,2])))
-    video_color.append(frame_color)
 
-np.save('lights/ana_lights_gbg.npy', video_color)
+nbr_strips = 8
+for i in range(nbr_strips):
+    video_color = []
+    for j in range(len(video)):
+        if j % 1000 == 0: print(j, '/', len(video))
+        frame = video[j]
+        frame_color = []
+        x = int(len(frame[:,0])/nbr_strips * i)
+        for k in range(len(frame)):
+            frame_color.append(Color(int(frame[k,x,1]), int(frame[k,x,0]), int(frame[k,x,2])))
+        video_color.append(frame_color)
+
+    np.save('lights/' + video_name[:-4] + '_' + str(i+1) + '.npy', video_color)
