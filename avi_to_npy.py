@@ -23,6 +23,7 @@ for i in range(nbr_strips):
         frame = video[j]
         frame_color = []
         x = int(frame.shape[1]/(nbr_strips-1) * i)
+        if x == frame.shape[1]: x -= 1
         for k in range(len(frame)):
             frame_color.append(Color(int(frame[k,x,1]), int(frame[k,x,0]), int(frame[k,x,2])))
         video_color.append(frame_color)
