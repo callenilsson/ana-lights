@@ -6,6 +6,7 @@ import nmap
 import pickle
 import mss
 import threading
+import json
 
 def text_time_to_seconds(text_time):
     minutes = int(text_time[: text_time.index(':')])
@@ -26,6 +27,7 @@ def start(pies):
     for i in range(len(songs)):
         print(i+1, '-', songs[i][0], '(' + songs[i][1] + ')')
     text_input = input('Enter song or custom timecode to start from: ')
+    if len(text_input) == 0:text_input = '1'
     if text_input.isdigit():
         song = songs[int(text_input)-1]
         song_start = text_time_to_seconds(song[1])
@@ -62,10 +64,15 @@ def ending(pies):
 
 def mapping(pies):
     for pi in pies: pi.send('mapping'.encode())
+    stream_positions = {}
     for pi in pies:
         pi.send('map_select'.encode())
         position = input('Select rpi position: ')
         pi.send(position.encode())
+        ip, port = pi.getpeername()
+        stream_positions[ip] = position
+    with open("stream_positions.json", "w") as outfile: 
+        outfile.write(json.dumps(stream_positions)) 
 
 def exitt(pies, stream_pies):
     for pi in pies: pi.close()
@@ -107,18 +114,26 @@ def Color(red, green, blue, white=0):
     return (white << 24) | (red << 16) | (green << 8) | blue
 
 def stream_thread(stream_pies):
-    mon = {'top' : 620, 'left' : 1400, 'width' : 1, 'height' : 288}
+    with open('stream_positions.json', 'r') as openfile:
+        stream_positions = json.load(openfile)
+
+    mon = {'top' : 400, 'left' : 930, 'width' : 1330, 'height' : 288}
     sct = mss.mss()
     while True:
         t = time.time()
-        img = np.asarray(sct.grab(mon))[:,0,:3]
+        img = np.asarray(sct.grab(mon))[::-1,:,:3]#*0.1
+        img[:144,:,:] = img[::2,:,:]
+        #print(img.shape)
 
-        img_color = []
-        for i in range(len(img)):
-            img_color.append(Color(int(img[i,1]), int(img[i,2]), int(img[i,0])))
+        for pi in stream_pies:
+            img_color = []
+            for i in range(len(img)):
+                ip, port = pi.getpeername()
+                x = int(mon['width']/len(stream_pies) * (int(stream_positions[ip])-1))
+                img_color.append(Color(int(img[i,x,1]), int(img[i,x,2]), int(img[i,x,0])))
 
-        data = pickle.dumps(img_color)
-        for pi in stream_pies: pi.send(data)
+            data = pickle.dumps(img_color)
+            pi.send(data)
         for pi in stream_pies: pi.recv(1024).decode()
 
         #print(int(1/(time.time()-t)), 'fps')
