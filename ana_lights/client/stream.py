@@ -2,12 +2,13 @@
 import socket
 import time
 import json
+from typing import List
 import numpy as np
 import mss
 from ..color import Color
 
 
-def stream_thread(pies_stream: list[socket.socket]) -> None:
+def stream_thread(pies_stream: List[socket.socket]) -> None:
     """Stream pixels to all raspberry pies."""
     # Read raspberry pi IP positions from JSON file
     with open("mapping/ip_positions.json", mode="r", encoding="utf-8") as f:

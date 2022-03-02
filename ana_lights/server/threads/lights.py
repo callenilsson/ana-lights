@@ -1,9 +1,10 @@
 """Thread displaying pixels on the LED strip."""
 import time
 import threading
+from typing import List
 from ..led_strip import LEDStrip
 from ...enums import Command
-from .globals import command, start_time, pixels_stream, offset
+from . import global_vars
 
 # pylint: disable=broad-except
 # pylint: disable=global-statement
@@ -14,27 +15,28 @@ def lights_thread(
     lock: threading.Lock,
     barrier: threading.Barrier,
     strip: LEDStrip,
-    video: list[list[int]],
+    video: List[List[int]],
 ) -> None:
     """Thread displaying pixels on the LED strip."""
-    global command
     barrier.wait()
     fps = 0
     while True:
         with lock:
-            get_command = command
+            get_command = global_vars.command
 
         if get_command == Command.START:
             try:
                 t = time.time()
                 with lock:
-                    true_index = int(abs((get_laptop_time() - start_time) * FPS))
+                    true_index = int(
+                        abs((get_laptop_time() - global_vars.start_time) * FPS)
+                    )
                 strip.render(video[true_index])
                 fps = int(1 / (time.time() - t))
                 # print(int(1/(time.time() - t)), 'fps')
             except Exception:
                 with lock:
-                    command = Command.STOP
+                    global_vars.command = Command.STOP
 
         elif get_command == Command.STOP:
             print(fps, "fps")
@@ -54,9 +56,9 @@ def lights_thread(
 
         if get_command == Command.STREAM:
             with lock:
-                strip.render(pixels_stream)
+                strip.render(global_vars.pixels_stream)
 
 
 def get_laptop_time() -> float:
     """Get the estimated laptop time."""
-    return time.time() + offset
+    return time.time() + global_vars.offset

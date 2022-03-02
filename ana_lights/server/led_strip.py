@@ -1,4 +1,5 @@
 """LED Strip wrapper class."""
+from typing import List
 from ..color import Color
 from ..rpi_ws281x.python.neopixel import Adafruit_NeoPixel
 
@@ -30,7 +31,7 @@ class LEDStrip:
         )
         self.strip.begin()
 
-    def render(self, pixels: list[int]) -> None:
+    def render(self, pixels: List[int]) -> None:
         """Render <pixels> on to the LED <strip>.
 
         Args:

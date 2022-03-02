@@ -3,6 +3,7 @@ import socket
 import sys
 import time
 import json
+from typing import List, Dict
 import dateutil.parser
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -13,8 +14,8 @@ from ..enums import SONGS, Command, Port
 class RaspberryPIs:
     """Raspberry pi wrapper connector."""
 
-    pies_command: list[socket.socket]
-    pies_stream: list[socket.socket]
+    pies_command: List[socket.socket]
+    pies_stream: List[socket.socket]
 
     def __init__(self) -> None:
         """Initialize the raspberry pi wrapper connector."""
@@ -89,12 +90,12 @@ class RaspberryPIs:
         sys.exit()
 
 
-def get_pies_on_network() -> list[dict[str, str]]:
+def get_pies_on_network() -> List[Dict[str, str]]:
     """Get all raspberry pies on the network."""
     nm = nmap.PortScanner()
     nm.scan(hosts="192.168.1.0/24", arguments="-sP")
     host_list = nm.all_hosts()
-    found_pies: list[dict[str, str]] = []
+    found_pies: List[Dict[str, str]] = []
     for host in host_list:
         if "mac" not in nm[host]["addresses"]:
             continue
@@ -105,7 +106,7 @@ def get_pies_on_network() -> list[dict[str, str]]:
     return found_pies
 
 
-def connect_pies(found_pies: list[dict[str, str]], port: int) -> list[socket.socket]:
+def connect_pies(found_pies: List[Dict[str, str]], port: int) -> List[socket.socket]:
     """Connect to all raspberry pies."""
     pies = []
     for found_pie in found_pies:

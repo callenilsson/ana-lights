@@ -2,7 +2,7 @@
 import threading
 import time
 import ntplib
-from .globals import laptop_command, offset
+from . import global_vars
 
 # pylint: disable=broad-except
 # pylint: disable=global-statement
@@ -10,14 +10,16 @@ from .globals import laptop_command, offset
 
 def time_thread(lock: threading.Lock) -> None:
     """Thread updating the time offset to the laptop."""
-    global offset
     c = ntplib.NTPClient()
     while True:
         try:
-            if laptop_command:
-                response = c.request(laptop_command.getpeername()[0], version=4)
+            if global_vars.laptop_command:
+                response = c.request(
+                    host=global_vars.laptop_command.getpeername()[0],
+                    version=4,
+                )
                 with lock:
-                    offset = response.offset
+                    global_vars.offset = response.offset
         except Exception as e:
             print(e)
         time.sleep(1)

@@ -3,7 +3,7 @@ import json
 import socket
 import threading
 from ...enums import Port
-from .globals import pixels_stream
+from . import global_vars
 
 # pylint: disable=broad-except
 # pylint: disable=global-statement
@@ -12,7 +12,6 @@ from .globals import pixels_stream
 def stream_thread(lock: threading.Lock) -> None:
     """Thread receiving streamed pixels from the laptop."""
     print("Starting stream thread...")
-    global pixels_stream
     server_stream = socket.socket()
     server_stream.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_stream.bind(("0.0.0.0", Port.STREAM.value))  # nosec
@@ -27,4 +26,4 @@ def stream_thread(lock: threading.Lock) -> None:
             print("Connection lost, shutting off stream thread...")
             break
         with lock:
-            pixels_stream = json.loads(data.decode("utf-8"))
+            global_vars.pixels_stream = json.loads(data.decode("utf-8"))
