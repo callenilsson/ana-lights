@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "ana-lights"
+version = "0.1.0"
+description = ""
+authors = ["Calle <carl.nilsson@tretton37.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^1.22.2"
+opencv-python = "^4.5.5"
+mss = "^6.1.0"
+ntplib = "^0.4.0"
+scikit-video = "^1.1.11"
+scikit-learn = "^1.0.2"
+python-dateutil = "^2.8.2"
+python-nmap = "^0.7.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+isort = "^5.10.1"
+pylint = "^2.12.2"
+pylama = "^8.3.7"
+bandit = "^1.7.3"
+mypy = "^0.931"
+flake8 = "^4.0.1"
+flake8-annotations = "^2.7.0"
+mccabe = "0.6.1"
+types-python-dateutil = "^2.8.9"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 90
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = true

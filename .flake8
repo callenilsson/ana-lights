@@ -1,0 +1,12 @@
+[flake8]
+max-line-length = 90
+exclude =
+    __pycache__,
+    .venv,
+    .git,
+    .github,
+    build,
+    dist
+    *pb2.py
+
+ignore = W503, W504, ANN101, ANN102, ANN002, ANN003

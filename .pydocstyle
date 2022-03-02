@@ -1,0 +1,5 @@
+[pydocstyle]
+ignore_decorators = wraps
+per-file-ignores = 
+    .venv/*
+    tests/*

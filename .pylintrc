@@ -1,0 +1,20 @@
+[MESSAGES CONTROL]
+disable=duplicate-code, invalid-name, too-few-public-methods, too-many-arguments
+ignored-classes=scoped_session
+
+[FORMAT]
+max-line-length = 90
+
+[DESIGN]
+max-args=7
+
+[MASTER]
+extension-pkg-whitelist=pydantic
+ignore=
+    __pycache__,
+    .venv,
+    .git,
+    .github,
+    build,
+    dist
+ignore-patterns=^.*pb2.py
