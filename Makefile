@@ -1,5 +1,10 @@
 .DEFAULT_GOAL: all
-	
+
+# Export raspberry pi requirements
+.PHONY: rpi-requirements
+rpi-requirements:
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
+
 # Run laptop code
 .PHONY: laptop
 laptop:

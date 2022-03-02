@@ -5,7 +5,6 @@ videos
 .vscode
 dist
 __pycache__
-requirements.txt
 .mypy_cache/
 .coverage
 .DS_Store
