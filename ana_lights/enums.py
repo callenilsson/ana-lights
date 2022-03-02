@@ -22,6 +22,7 @@ class Command(Enum):
     MAP = "map"
     MAP_SELECT = "map_select"
     READY = "ready"
+    NEXT = "next"
 
 
 class Port(Enum):

@@ -13,7 +13,7 @@ rpi-install:
 # Run laptop code
 .PHONY: laptop
 laptop:
-	poetry run python -m ana_lights.client.client
+	sudo poetry run python -m ana_lights.client.client
 
 # Run raspberry pi code
 .PHONY: rpi

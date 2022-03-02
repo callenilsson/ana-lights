@@ -21,18 +21,19 @@ def lights_thread(
     barrier.wait()
     fps = 0
     while True:
+        t = time.time()
+
         with lock:
             get_command = global_vars.command
 
         if get_command == Command.START:
             try:
-                t = time.time()
                 with lock:
                     true_index = int(
                         abs((get_laptop_time() - global_vars.start_time) * FPS)
                     )
                 strip.render(video[true_index])
-                fps = int(1 / (time.time() - t))
+                # fps = int(1 / (time.time() - t))
                 # print(int(1/(time.time() - t)), 'fps')
             except Exception:
                 with lock:
@@ -57,6 +58,8 @@ def lights_thread(
         if get_command == Command.STREAM:
             with lock:
                 strip.render(global_vars.pixels_stream)
+
+        fps = int(1 / (time.time() - t))
 
 
 def get_laptop_time() -> float:

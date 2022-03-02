@@ -2,7 +2,7 @@
 import json
 import socket
 import threading
-from ...enums import Port
+from ...enums import Command, Port
 from . import global_vars
 
 # pylint: disable=broad-except
@@ -21,9 +21,16 @@ def stream_thread(lock: threading.Lock) -> None:
     while True:
         try:
             data = laptop_stream.recv(4096)
-            laptop_stream.send("next".encode())
-        except Exception:
-            print("Connection lost, shutting off stream thread...")
+            data_decoded = data.decode("utf-8")
+            while data_decoded[-1] != "]":
+                data = laptop_stream.recv(4096)
+                data_decoded += data.decode("utf-8")
+
+            laptop_stream.send(Command.NEXT.value.encode("utf-8"))
+
+        except Exception as e:
+            print(e, "HEJ1")
             break
+
         with lock:
-            global_vars.pixels_stream = json.loads(data.decode("utf-8"))
+            global_vars.pixels_stream = json.loads(data_decoded)

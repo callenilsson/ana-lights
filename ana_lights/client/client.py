@@ -3,12 +3,14 @@ import threading
 from ..enums import Command
 from .stream import stream_thread
 from .raspberry_pies import RaspberryPIs
+from . import global_vars
 
 
 if __name__ == "__main__":
     print("Scanning for pies...")
+    global_vars.initialize()
+    lock = threading.Lock()
     pies = RaspberryPIs()
-    threading.Thread(target=stream_thread, args=(pies.pies_stream,)).start()
 
     while True:
         print("---------------")
@@ -16,15 +18,16 @@ if __name__ == "__main__":
         print("2 - Stop")
         print("3 - Pause")
         print("4 - Resume")
-        print("5 - Ending")
-        print("6 - Mapping")
-        print("7 - Stream")
-        print("8 - Exit")
+        print("5 - Mapping")
+        print("6 - Stream")
+        print("7 - Exit")
         action = input("Select an action to perform: ")
 
         if action == "1":
             pies.start()
         if action == "2":
+            with lock:
+                global_vars.command = Command.STOP
             pies.send_command(Command.STOP)
         if action == "3":
             pies.send_command(Command.PAUSE)
@@ -34,5 +37,6 @@ if __name__ == "__main__":
             pies.map_positions()
         if action == "6":
             pies.send_command(Command.STREAM)
+            threading.Thread(target=stream_thread, args=(lock, pies.pies_stream)).start()
         if action == "7":
             pies.close()

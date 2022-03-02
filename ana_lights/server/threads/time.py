@@ -13,13 +13,13 @@ def time_thread(lock: threading.Lock) -> None:
     c = ntplib.NTPClient()
     while True:
         try:
-            if global_vars.laptop_command:
+            if global_vars.laptop_ip is not None:
                 response = c.request(
-                    host=global_vars.laptop_command.getpeername()[0],
+                    host=global_vars.laptop_ip,
                     version=4,
                 )
                 with lock:
                     global_vars.offset = response.offset
         except Exception as e:
-            print(e)
+            print(e, "HEJ3")
         time.sleep(1)

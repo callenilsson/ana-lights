@@ -3,6 +3,7 @@ import socket
 import sys
 import time
 import json
+from dataclasses import dataclass
 from typing import List, Dict
 import dateutil.parser
 import numpy as np
@@ -11,22 +12,30 @@ import nmap
 from ..enums import SONGS, Command, Port
 
 
+@dataclass
+class RaspberryPI:
+    """"""
+
+    ip: str
+    client: socket.socket
+
+
 class RaspberryPIs:
     """Raspberry pi wrapper connector."""
 
-    pies_command: List[socket.socket]
-    pies_stream: List[socket.socket]
+    pies_command: List[RaspberryPI]
+    pies_stream: List[RaspberryPI]
 
     def __init__(self) -> None:
         """Initialize the raspberry pi wrapper connector."""
         found_pies = get_pies_on_network()
-        self.pies_command = connect_pies(found_pies, port=Port.COMMAND.value)
-        self.pies_stream = connect_pies(found_pies, port=Port.STREAM.value)
+        self.pies_command = self.connect_pies(Port.COMMAND, found_pies)
+        self.pies_stream = self.connect_pies(Port.STREAM, found_pies)
 
     def send_command(self, command: Command) -> None:
         """Send a command to the raspberry pies."""
         for pi in self.pies_command:
-            pi.send(str(command.value).encode("utf-8"))
+            pi.client.send(str(command.value).encode("utf-8"))
 
     def map_positions(self) -> None:
         """Send a map position for each raspberry pi, based on its ip address."""
@@ -36,11 +45,10 @@ class RaspberryPIs:
         # Assign a position for each raspberry pi's IP
         ip_positions = {}
         for pi in self.pies_command:
-            pi.send(Command.MAP_SELECT.value.encode("utf-8"))
+            pi.client.send(Command.MAP_SELECT.value.encode("utf-8"))
             position = input("Select rpi position: ")
-            pi.send(position.encode("utf-8"))
-            ip, _ = pi.getpeername()
-            ip_positions[ip] = position
+            pi.client.send(position.encode("utf-8"))
+            ip_positions[pi.ip] = position
 
         # Write ip map to file
         with open("mapping/ip_positions.json", mode="w", encoding="utf-8") as f:
@@ -66,8 +74,12 @@ class RaspberryPIs:
 
         # Wait for ready responses from RPi's
         for pi in self.pies_command:
-            pi.recv(1024).decode()
-            print("Raspberry pies ready to start", pi.getpeername()[0])
+            command = Command(pi.client.recv(1024).decode("utf-8"))
+            if command != Command.READY:
+                raise ValueError(
+                    f"Raspberry PI sent '{command}' instead of '{Command.READY.value}'"
+                )
+            print("Raspberry pies ready to start", pi.ip)
 
         # Ready
         times = []
@@ -79,15 +91,31 @@ class RaspberryPIs:
         start_time = model.predict(clicks - 1)[0]
 
         for pi in self.pies_command:
-            pi.send(str(start_time).encode("utf-8"))
+            pi.client.send(str(start_time).encode("utf-8"))
 
     def close(self) -> None:
         """Close connections to all raspberry pies."""
         for pi in self.pies_command:
-            pi.close()
+            pi.client.close()
         for pi in self.pies_stream:
-            pi.close()
+            pi.client.close()
         sys.exit()
+
+    def connect_pies(
+        self, port: Port, found_pies: List[Dict[str, str]]
+    ) -> List[RaspberryPI]:
+        """Connect to all raspberry pies."""
+        pies: List[RaspberryPI] = []
+        for found_pie in found_pies:
+            pi = socket.socket()
+            pi.connect((found_pie["ip"], port.value))
+            pies.append(
+                RaspberryPI(
+                    ip=found_pie["ip"],
+                    client=pi,
+                ),
+            )
+        return pies
 
 
 def get_pies_on_network() -> List[Dict[str, str]]:
@@ -97,23 +125,11 @@ def get_pies_on_network() -> List[Dict[str, str]]:
     host_list = nm.all_hosts()
     found_pies: List[Dict[str, str]] = []
     for host in host_list:
-        if "mac" not in nm[host]["addresses"]:
-            continue
-        mac = nm[host]["addresses"]["mac"]
-        vendor = nm[host]["vendor"][mac]
-        if "raspberry" in vendor.lower():
-            found_pies.append({"ip": host, "mac": mac})
+        host_name = nm[host]["hostnames"][0]["name"]
+        if "raspberry" in host_name:
+            found_pies.append({"ip": host})
+    print("Found pies:", found_pies)
     return found_pies
-
-
-def connect_pies(found_pies: List[Dict[str, str]], port: int) -> List[socket.socket]:
-    """Connect to all raspberry pies."""
-    pies = []
-    for found_pie in found_pies:
-        pi = socket.socket()
-        pi.connect((found_pie["ip"], port))
-        pies.append(pi)
-    return pies
 
 
 def total_seconds(timestamp: str) -> int:
