@@ -1,13 +1,11 @@
 """Thread displaying pixels on the LED strip."""
 import time
 import threading
-from typing import List
 from ..led_strip import LEDStrip
 from ...enums import Command
 from . import global_vars
 
 # pylint: disable=broad-except
-# pylint: disable=global-statement
 FPS = 60
 
 
@@ -15,7 +13,7 @@ def lights_thread(
     lock: threading.Lock,
     barrier: threading.Barrier,
     strip: LEDStrip,
-    video: List[List[int]],
+    video: list[list[int]],
 ) -> None:
     """Thread displaying pixels on the LED strip."""
     barrier.wait()
@@ -30,11 +28,16 @@ def lights_thread(
             try:
                 with lock:
                     true_index = int(
-                        abs((get_laptop_time() - global_vars.start_time) * FPS)
+                        abs(
+                            (
+                                get_laptop_time()
+                                - global_vars.start_time
+                                + global_vars.song_start
+                            )
+                            * FPS
+                        )
                     )
                 strip.render(video[true_index])
-                # fps = int(1 / (time.time() - t))
-                # print(int(1/(time.time() - t)), 'fps')
             except Exception:
                 with lock:
                     global_vars.command = Command.STOP
@@ -57,6 +60,8 @@ def lights_thread(
 
         if get_command == Command.STREAM:
             with lock:
+                if global_vars.pixels_stream is None:
+                    continue
                 strip.render(global_vars.pixels_stream)
 
         fps = int(1 / (time.time() - t))

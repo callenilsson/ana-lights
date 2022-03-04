@@ -1,18 +1,17 @@
 """Stream pixels to all raspberry pies."""
-from glob import glob
-import time
 import json
 import threading
-from typing import List
 import numpy as np
 import mss
-from .raspberry_pies import RaspberryPI
-from ..color import Color
-from ..enums import Command
+import cv2
+from pynput import mouse
 from . import global_vars
+from .commands import RaspberryPI
+from ..color import Color
+from ..enums import Command, LEDSettings
 
 
-def stream_thread(lock: threading.Lock, pies: List[RaspberryPI]) -> None:
+def stream_thread(lock: threading.Lock, pies: list[RaspberryPI]) -> None:
     """Stream pixels to all raspberry pies."""
     # Read raspberry pi IP positions from JSON file
     with open("mapping/ip_positions.json", mode="r", encoding="utf-8") as f:
@@ -20,23 +19,21 @@ def stream_thread(lock: threading.Lock, pies: List[RaspberryPI]) -> None:
 
     # Initialize screen capture
     sct = mss.mss()
-    scale = 2
-    mon = {"top": 400, "left": 930, "width": 1330, "height": 288}
+
+    # Read stream window size from JSON file
+    with open("mapping/stream_window.json", mode="r", encoding="utf-8") as f:
+        mon = json.load(f)
 
     while True:
         with lock:
-            if global_vars.command == Command.STOP:
+            if global_vars.command != Command.STREAM:
                 break
 
-        # Start time of frame
-        t = time.time()
-
-        # Screen capture
-        img = (
-            np.asarray(sct.grab({k: int(v / scale) for k, v in mon.items()}))[::-1, :, :3]
-            * 0.1
+        # Screen capture, and resize to height is same as number of leds
+        img = np.asarray(sct.grab(mon))[::-1, :, :3] * 0.1
+        img = cv2.resize(
+            img, dsize=(img.shape[1], LEDSettings.COUNT), interpolation=cv2.INTER_NEAREST
         )
-        t2 = time.time()
 
         # Send pixels to all raspberry pies
         for pi in pies:
@@ -57,8 +54,6 @@ def stream_thread(lock: threading.Lock, pies: List[RaspberryPI]) -> None:
             # Send pixels to raspberry pi
             pi.client.send(json.dumps(pixels, ensure_ascii=False).encode("utf-8"))
 
-        t3 = time.time()
-
         # Wait for ok to continue
         for pi in pies:
             command = Command(pi.client.recv(1024).decode("utf-8"))
@@ -67,10 +62,40 @@ def stream_thread(lock: threading.Lock, pies: List[RaspberryPI]) -> None:
                     f"Raspberry PI sent '{command}' instead of '{Command.NEXT.value}'"
                 )
 
-        t4 = time.time()
-        if int(1 / (time.time() - t)) < 20:
-            print((t2 - t) * 1000)
-            print((t3 - t2) * 1000)
-            print((t4 - t3) * 1000)
-            print(int(1 / (time.time() - t)), "fps")
-            print()
+
+def on_click(x: float, y: float, button: int, pressed: bool) -> bool:
+    """Hej."""
+    if button == mouse.Button.left:
+        if pressed:
+            print(f"Mouse pressed {int(x)}, {int(y)}")
+            global_vars.x = int(x)
+            global_vars.y = int(y)
+            return False  # Return False to stop mouse listener.
+    return True
+
+
+def set_stream_window() -> None:
+    """Hej."""
+    window = {}
+    # Mouse click 1
+    with mouse.Listener(on_click=on_click) as listener:
+        listener.join()
+    x1 = global_vars.x
+    y1 = global_vars.y
+
+    # Mouse click 2
+    with mouse.Listener(on_click=on_click) as listener:
+        listener.join()
+    x2 = global_vars.x
+    y2 = global_vars.y
+
+    # Add window to dict
+    window["top"] = min(y2, y1)
+    window["left"] = min(x2, x1)
+    window["width"] = abs(x2 - x1)
+    window["height"] = abs(y2 - y1)
+    print("Updated stream window size to:", window)
+
+    # Write window dict to JSON file
+    with open("mapping/stream_window.json", mode="w", encoding="utf-8") as f:
+        f.write(json.dumps(window))

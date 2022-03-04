@@ -9,7 +9,7 @@ max-line-length = 90
 max-args=7
 
 [MASTER]
-extension-pkg-whitelist=pydantic
+extension-pkg-whitelist=pydantic, cv2
 ignore=
     __pycache__,
     .venv,

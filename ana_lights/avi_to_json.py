@@ -1,7 +1,6 @@
 """Convert LED strips AVI video to JSON files."""
 import json
 import skvideo.io
-from typing import List
 from .color import Color
 
 if __name__ == "__main__":
@@ -27,7 +26,7 @@ if __name__ == "__main__":
                 x -= 1
 
             # Convert frame to list of pixels
-            frame_pixels: List[int] = [
+            frame_pixels: list[int] = [
                 Color(
                     red=int(frame[y, x, 1]),
                     green=int(frame[y, x, 0]),

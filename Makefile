@@ -8,7 +8,18 @@ rpi-requirements:
 # Install raspberry pi python requirements
 .PHONY: rpi-install
 rpi-install:
-	pip3 install -r requirements.txt
+	sudo pip install -r requirements.txt
+
+# Run ntp server
+.PHONY: ntp
+ntp:
+	docker run --name=ntp --restart=always --detach --publish=123:123/udp cturra/ntp
+
+# Run ntp server
+.PHONY: ntp-stop
+ntp-stop:
+	docker stop ntp
+	docker rm ntp
 
 # Run laptop code
 .PHONY: laptop
@@ -18,4 +29,4 @@ laptop:
 # Run raspberry pi code
 .PHONY: rpi
 rpi:
-	sudo /usr/bin/python3 -m ana_lights.server.server
+	sudo /usr/bin/python -m ana_lights.server.server

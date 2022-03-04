@@ -12,24 +12,26 @@ from . import global_vars
 def stream_thread(lock: threading.Lock) -> None:
     """Thread receiving streamed pixels from the laptop."""
     print("Starting stream thread...")
-    server_stream = socket.socket()
-    server_stream.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server_stream.bind(("0.0.0.0", Port.STREAM.value))  # nosec
-    server_stream.listen(1)
-    laptop_stream, _ = server_stream.accept()
+    server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind(("0.0.0.0", Port.STREAM.value))  # nosec
+    server.listen(1)
+    laptop, _ = server.accept()
 
     while True:
         try:
-            data = laptop_stream.recv(4096)
+            data = laptop.recv(4096)
             data_decoded = data.decode("utf-8")
             while data_decoded[-1] != "]":
-                data = laptop_stream.recv(4096)
+                data = laptop.recv(4096)
                 data_decoded += data.decode("utf-8")
 
-            laptop_stream.send(Command.NEXT.value.encode("utf-8"))
+            laptop.send(Command.NEXT.value.encode("utf-8"))
 
         except Exception as e:
             print(e, "HEJ1")
+            laptop.close()
+            server.close()
             break
 
         with lock:

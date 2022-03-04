@@ -7,17 +7,9 @@ from .threads.lights import lights_thread
 from .threads.command import command_thread
 from .threads.stream import stream_thread
 from .threads import global_vars
+from ..enums import LEDSettings
 
 # pylint: disable=global-statement, global-at-module-level
-
-# LED strip configuration:
-LED_COUNT = 144  # Number of LED pixels.
-LED_PIN = 13  # GPIO pin connected to the pixels (18 uses PWM, 10 uses SPI /dev/spidev0.0)
-LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
-LED_DMA = 10  # DMA channel to use for generating signal (try 10)
-LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
-LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
-LED_CHANNEL = 1  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 
 if __name__ == "__main__":
@@ -27,13 +19,13 @@ if __name__ == "__main__":
     global_vars.offset = 0
 
     strip = LEDStrip(
-        led_count=LED_COUNT,
-        pin=LED_PIN,
-        freq_hz=LED_FREQ_HZ,
-        dma=LED_DMA,
-        invert=LED_INVERT,
-        brightness=LED_BRIGHTNESS,
-        channel=LED_CHANNEL,
+        led_count=LEDSettings.COUNT,
+        pin=LEDSettings.PIN,
+        freq_hz=LEDSettings.FREQ_HZ,
+        dma=LEDSettings.DMA,
+        invert=LEDSettings.INVERT,
+        brightness=LEDSettings.BRIGHTNESS,
+        channel=LEDSettings.CHANNEL,
     )
     strip.black()
 
@@ -47,5 +39,10 @@ if __name__ == "__main__":
     threading.Thread(target=lights_thread, args=(lock, barrier, strip, video)).start()
 
     while True:
-        threading.Thread(target=stream_thread, args=(lock,)).start()
-        command_thread(lock, barrier, strip)
+        t1 = threading.Thread(target=stream_thread, args=(lock,))
+        t2 = threading.Thread(target=command_thread, args=(lock, barrier, strip))
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        print("Restarting stream and command thread")
