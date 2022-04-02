@@ -22,7 +22,8 @@ def stream_thread(lock: threading.Lock, pies: list[RaspberryPI]) -> None:
 
     # Read stream window size from JSON file
     with open("mapping/stream_window.json", mode="r", encoding="utf-8") as f:
-        mon = json.load(f)
+        with lock:
+            global_vars.stream_window = json.load(f)
 
     while True:
         with lock:
@@ -30,7 +31,8 @@ def stream_thread(lock: threading.Lock, pies: list[RaspberryPI]) -> None:
                 break
 
         # Screen capture, and resize to height is same as number of leds
-        img = np.asarray(sct.grab(mon))[::-1, :, :3] * 0.1
+        with lock:
+            img = np.asarray(sct.grab(global_vars.stream_window))[::-1, :, :3] * 0.1
         img = cv2.resize(
             img, dsize=(img.shape[1], LEDSettings.COUNT), interpolation=cv2.INTER_NEAREST
         )
@@ -40,7 +42,12 @@ def stream_thread(lock: threading.Lock, pies: list[RaspberryPI]) -> None:
             pixels = []
             for i in range(len(img)):
                 # Get the x column of pixels in the image for the strip
-                x = int(mon["width"] / len(pies) * (int(ip_positions[pi.ip]) - 1))
+                with lock:
+                    x = int(
+                        global_vars.stream_window["width"]
+                        / len(pies)
+                        * (int(ip_positions[pi.ip]) - 1)
+                    )
 
                 # Append pixel to pixels
                 pixels.append(
@@ -74,8 +81,9 @@ def on_click(x: float, y: float, button: int, pressed: bool) -> bool:
     return True
 
 
-def set_stream_window() -> None:
+def set_stream_window(lock: threading.Lock) -> None:
     """Hej."""
+    print("---------------")
     window = {}
     # Mouse click 1
     with mouse.Listener(on_click=on_click) as listener:
@@ -99,3 +107,6 @@ def set_stream_window() -> None:
     # Write window dict to JSON file
     with open("mapping/stream_window.json", mode="w", encoding="utf-8") as f:
         f.write(json.dumps(window))
+
+    with lock:
+        global_vars.stream_window = window

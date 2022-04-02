@@ -35,7 +35,7 @@ class Port(Enum):
 class LEDSettings:
     """Hej."""
 
-    COUNT = 144  # Number of LED pixels.
+    COUNT = 288  # Number of LED pixels.
     PIN = 13  # GPIO pin of the leds (18 uses PWM, 10 uses SPI /dev/spidev0.0)
     FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
     DMA = 10  # DMA channel to use for generating signal (try 10)

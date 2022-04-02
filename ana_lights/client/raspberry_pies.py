@@ -1,7 +1,6 @@
 """Hej."""
 import socket
 from dataclasses import dataclass
-import sys
 import json
 import nmap
 from ..enums import Port
@@ -15,36 +14,43 @@ class RaspberryPI:
     client: socket.socket
 
 
-def close(pies: list[RaspberryPI]) -> None:
-    """Close connections to all raspberry pies."""
-    for pi in pies:
-        pi.client.close()
-    sys.exit()
-
-
-def connect_pies(port: Port, found_pies: list[dict[str, str]]) -> list[RaspberryPI]:
+def connect_pies(port: Port, found_pies: list[str]) -> list[RaspberryPI]:
     """Connect to all raspberry pies."""
     pies: list[RaspberryPI] = []
     for found_pie in found_pies:
         try:
             pi = socket.socket()
             pi.settimeout(5)  # 10 seconds timeout
-            pi.connect((found_pie["ip"], port.value))
+            pi.connect((found_pie, port.value))
             pies.append(
                 RaspberryPI(
-                    ip=found_pie["ip"],
+                    ip=found_pie,
                     client=pi,
                 ),
             )
         except Exception:  # pylint: disable=broad-except
+            for pie in pies:
+                pie.client.close()
             break
     return pies
 
 
-def read_saved_pies() -> list[dict[str, str]]:
+def read_saved_pies() -> list[str]:
     """Hej."""
     with open("mapping/pi_ips.json", mode="r", encoding="utf-8") as f:
         pi_ips = json.load(f)
+    return pi_ips
+
+
+def write_new_pies() -> list[str]:
+    """Hej."""
+    nbr_pies = int(input("Number of RPis: "))
+    pi_ips = ["192.168.1." + input(f"{i+1} RPi IP: 192.168.1.") for i in range(nbr_pies)]
+
+    # Write raspberry pi IPs to file
+    with open("mapping/pi_ips.json", mode="w", encoding="utf-8") as f:
+        f.write(json.dumps(pi_ips))
+
     return pi_ips
 
 
@@ -53,11 +59,12 @@ def scan_pies_on_network() -> list[dict[str, str]]:
     nm = nmap.PortScanner()
 
     while True:
-        nm.scan(hosts="192.168.0.0/24", arguments="-sP")
+        nm.scan(hosts="192.168.1.0/24", arguments="-sP")
         host_list = nm.all_hosts()
 
         found_pies: list[dict[str, str]] = []
         for host in host_list:
+            print(nm[host])
             if "Raspberry" in json.dumps(nm[host]):
                 found_pies.append(
                     {
@@ -67,8 +74,10 @@ def scan_pies_on_network() -> list[dict[str, str]]:
                 )
 
         if len(found_pies) == 0:
+            print("---------------")
             print("No raspberry pies found on network. Scanning again...")
         else:
+            print("---------------")
             print("Found raspberry pies:", found_pies)
             print("1 - Finish scan")
             print("2 - Scan again")

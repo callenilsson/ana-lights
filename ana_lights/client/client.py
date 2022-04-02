@@ -2,24 +2,24 @@
 import threading
 from ..enums import Command, Port
 from .stream import stream_thread, set_stream_window
-from .raspberry_pies import read_saved_pies, scan_pies_on_network, connect_pies, close
+from .raspberry_pies import read_saved_pies, write_new_pies, connect_pies
 from .commands import start, send_command, map_positions
 from . import global_vars
 
 
 if __name__ == "__main__":  # noqa
-    print("Scanning for ..")
     global_vars.initialize()
     lock = threading.Lock()
 
     while True:
         found_pies = read_saved_pies()
+        print("---------------")
         print("Saved RPi IPs:", found_pies)
         print("1 - Connect to saved RPi IPs")
-        print("2 - Scan network for new RPi IPs")
+        print("2 - Write new RPi IPs")
         action = input("Select an action to perform: ")
         if action == "2":
-            found_pies = scan_pies_on_network()
+            found_pies = write_new_pies()
         pies_command = connect_pies(Port.COMMAND, found_pies)
         pies_stream = connect_pies(Port.STREAM, found_pies)
 
@@ -27,6 +27,9 @@ if __name__ == "__main__":  # noqa
             print("Could not connect to all RPis. Please re-scan for new RPi IPs.")
             continue
         break
+
+    print("---------------")
+    print("Connected to RPi IPs:", found_pies)
 
     while True:
         print("---------------")
@@ -37,7 +40,6 @@ if __name__ == "__main__":  # noqa
         print("5 - Mapping")
         print("6 - Stream")
         print("7 - Stream window")
-        print("8 - Exit")
         action = input("Select an action to perform: ")
 
         if action == "1":
@@ -54,7 +56,4 @@ if __name__ == "__main__":  # noqa
             send_command(lock, pies_command, Command.STREAM)
             threading.Thread(target=stream_thread, args=(lock, pies_stream)).start()
         if action == "7":
-            set_stream_window()
-        if action == "8":
-            close(pies_command)
-            close(pies_stream)
+            set_stream_window(lock)
