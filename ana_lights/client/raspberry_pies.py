@@ -45,7 +45,9 @@ def read_saved_pies() -> list[str]:
 def write_new_pies() -> list[str]:
     """Hej."""
     nbr_pies = int(input("Number of RPis: "))
-    pi_ips = ["192.168.1." + input(f"{i+1} RPi IP: 192.168.1.") for i in range(nbr_pies)]
+    pi_ips = [
+        "192.168.1.20" + input(f"{i+1} RPi IP: 192.168.1.20") for i in range(nbr_pies)
+    ]
 
     # Write raspberry pi IPs to file
     with open("mapping/pi_ips.json", mode="w", encoding="utf-8") as f:

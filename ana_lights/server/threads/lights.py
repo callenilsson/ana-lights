@@ -38,8 +38,9 @@ def lights_thread(
                         )
                     )
                 strip.render(video[true_index])
-            except Exception:
+            except Exception as e:
                 with lock:
+                    print(e)
                     global_vars.command = Command.STOP
 
         elif get_command == Command.STOP:

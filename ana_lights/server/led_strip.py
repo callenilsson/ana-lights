@@ -36,9 +36,8 @@ class LEDStrip:
         Args:
             pixels: List of 24-bit int pixels to render on the strip.
         """
-        nbr_pixels = self.strip.numPixels()
         for i in range(self.strip.numPixels()):
-            self.strip.setPixelColor(n=i, color=int(pixels[i % nbr_pixels]))
+            self.strip.setPixelColor(n=i, color=int(pixels[i % len(pixels)]))
         self.strip.show()
 
     def render_color(self, red: int, green: int, blue: int) -> None:

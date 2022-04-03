@@ -31,6 +31,9 @@ if __name__ == "__main__":  # noqa
     print("---------------")
     print("Connected to RPi IPs:", found_pies)
 
+    if action == "2":
+        map_positions(lock, pies_command)
+
     while True:
         print("---------------")
         print("1 - Start")

@@ -21,5 +21,5 @@ def time_thread(lock: threading.Lock) -> None:
                 with lock:
                     global_vars.offset = response.offset
         except Exception as e:
-            print(e, "HEJ3")
+            print(type(e), e, "HEJ3")
         time.sleep(1)
