@@ -30,3 +30,8 @@ laptop:
 .PHONY: rpi
 rpi:
 	sudo /usr/bin/python -m ana_lights.server.server
+
+# Send final_lights folder to a raspberry pi ip
+.PHONY: send-lights
+send-lights:
+	scp -r final_lights/ pi@$(ip):~/ana-lights/
