@@ -9,7 +9,7 @@ from . import global_vars
 FPS = 60
 
 
-def lights_thread(
+def lights_thread(  # noqa
     lock: threading.Lock,
     barrier: threading.Barrier,
     strip: LEDStrip,

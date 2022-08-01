@@ -8,3 +8,7 @@ __pycache__
 .mypy_cache/
 .coverage
 .DS_Store
+after_effects/Adobe After Effects Auto-Save
+after_effects/lights_AME
+after_effects/lights_m1_AME
+final_lights/strip*
