@@ -6,7 +6,7 @@ from ...enums import Command
 from . import global_vars
 
 # pylint: disable=broad-except
-FPS = 60
+FPS = 30
 
 
 def lights_thread(  # noqa
@@ -19,7 +19,7 @@ def lights_thread(  # noqa
     barrier.wait()
     fps = 0
     while True:
-        t = time.time()
+        # t = time.time()
 
         with lock:
             get_command = global_vars.command
@@ -65,7 +65,7 @@ def lights_thread(  # noqa
                     continue
                 strip.render(global_vars.pixels_stream)
 
-        fps = int(1 / (time.time() - t))
+        # global_vars.fps = int(1 / (time.time() - t))
 
 
 def get_laptop_time() -> float:

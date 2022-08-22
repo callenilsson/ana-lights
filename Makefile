@@ -34,4 +34,4 @@ rpi:
 # Send final_lights folder to a raspberry pi ip
 .PHONY: send-lights
 send-lights:
-	scp -r final_lights/ pi@$(ip):~/ana-lights/
+	scp -r final_lights/strip_1_30fps.json pi@$(ip):~/ana-lights/final_lights/strip_1_30fps.json

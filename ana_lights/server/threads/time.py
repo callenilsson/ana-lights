@@ -12,6 +12,7 @@ def time_thread(lock: threading.Lock) -> None:
     """Thread updating the time offset to the laptop."""
     c = ntplib.NTPClient()
     while True:
+        # print("FPS:", global_vars.fps)
         try:
             if global_vars.laptop_ip is not None:
                 response = c.request(

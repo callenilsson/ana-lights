@@ -1,24 +1,26 @@
 """Convert LED strips AVI video to JSON files."""
 import json
-import skvideo.io
+import glob
+import imageio
 from .color import Color
 
 if __name__ == "__main__":
-    video = skvideo.io.vread("videos/test_render.mov")
-
     # For each strip, write LED video pixel data to JSON file
+    frame_paths = sorted(list(glob.glob("videos/test_render/*.png")))
+
     nbr_strips = 10
-    for i in range(nbr_strips):
-        # For each frame in video
-        video_pixels = []
-        for j, frame in enumerate(video):
+    strips: list[list[list[int]]] = [[] for _ in range(nbr_strips)]
+    for frame_nbr, img_path in enumerate(frame_paths):
+        frame = imageio.imread(img_path)
+
+        # Print progress
+        if frame_nbr % 1000 == 0 and frame_nbr > 0:
+            print(f"{frame_nbr}/{len(frame_paths)}")
+
+        for strip_nbr in range(nbr_strips):
             # Get the x column of pixels in the video for the strip
             column_width = frame.shape[1] / nbr_strips
-            x = int(column_width * (i + 1) - column_width / 2)
-
-            # Print progress
-            if j % 1000 == 0:
-                print(f"{j}/{len(video)}, x={x}")
+            x = int(column_width * (strip_nbr + 1) - column_width / 2)
 
             # Convert frame to list of pixels
             frame_pixels: list[int] = [
@@ -31,8 +33,11 @@ if __name__ == "__main__":
             ]
 
             # Add frame pixels to the video
-            video_pixels.append(frame_pixels)
+            strips[strip_nbr].append(frame_pixels)
 
-        # Write LED video pixel data to JSON file
-        with open(file=f"final_lights/strip_{i+1}.json", mode="w", encoding="utf-8") as f:
-            json.dump(video_pixels, f)
+    # Write LED video pixel data to JSON file
+    for strip_nbr, strip in enumerate(strips):
+        with open(
+            file=f"final_lights/strip_{strip_nbr+1}.json", mode="w", encoding="utf-8"
+        ) as f:
+            json.dump(strip, f)

@@ -33,7 +33,9 @@ if __name__ == "__main__":
     with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
         position = json.load(f)
     with open(
-        f"final_lights/strip_{position['position']}.json", mode="r", encoding="utf-8"
+        f"final_lights/strip_{position['position']}_30fps.json",
+        mode="r",
+        encoding="utf-8",
     ) as f:
         video = json.load(f)
 
