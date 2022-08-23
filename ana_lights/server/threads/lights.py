@@ -13,7 +13,6 @@ def lights_thread(  # noqa
     lock: threading.Lock,
     barrier: threading.Barrier,
     strip: LEDStrip,
-    video: list[list[int]],
 ) -> None:
     """Thread displaying pixels on the LED strip."""
     barrier.wait()
@@ -37,7 +36,7 @@ def lights_thread(  # noqa
                             * FPS
                         )
                     )
-                strip.render(video[true_index])
+                strip.render(global_vars.video[true_index])
             except Exception as e:
                 with lock:
                     print(e)
@@ -56,8 +55,8 @@ def lights_thread(  # noqa
         elif get_command == Command.PAUSE:
             barrier.wait()
 
-        if get_command == Command.MAP_SELECT:
-            strip.render_color(red=10, green=10, blue=10)
+        # if get_command == Command.MAP_SELECT:
+        #     strip.render_color(red=10, green=10, blue=10)
 
         if get_command == Command.STREAM:
             with lock:

@@ -28,6 +28,7 @@ if __name__ == "__main__":
         channel=LEDSettings.CHANNEL,
     )
     strip.black()
+    strip.status(red=0, green=0, blue=10)
 
     print("Loading video...")
     with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
@@ -37,10 +38,10 @@ if __name__ == "__main__":
         mode="r",
         encoding="utf-8",
     ) as f:
-        video = json.load(f)
+        global_vars.video = json.load(f)
 
     threading.Thread(target=time_thread, args=(lock,)).start()
-    threading.Thread(target=lights_thread, args=(lock, barrier, strip, video)).start()
+    threading.Thread(target=lights_thread, args=(lock, barrier, strip)).start()
 
     while True:
         t1 = threading.Thread(target=stream_thread, args=(lock,))

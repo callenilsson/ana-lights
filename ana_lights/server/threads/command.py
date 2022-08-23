@@ -67,6 +67,7 @@ def mapping(
     barrier: threading.Barrier,
     command_recv: Command,
     laptop: socket.socket,
+    strip: LEDStrip,
 ) -> None:
     """Hej."""
     if command_recv == Command.MAP:
@@ -74,12 +75,28 @@ def mapping(
             global_vars.command = Command.STOP
         select = get_command(lock, laptop)
         if select == Command.MAP_SELECT:
+            strip.render_color(red=10, green=10, blue=10)
+
             with lock:
                 global_vars.command = Command.MAP_SELECT
                 barrier.wait()
+
             position = laptop.recv(1024).decode("utf-8")
+            strip.black()
+            strip.status(red=10, green=10, blue=0)
+
             with open("mapping/pi_position.json", mode="w", encoding="utf-8") as f:
                 f.write(json.dumps({"position": position}))
+
+            del global_vars.video
+
+            strip.status(red=0, green=0, blue=10)
+            print(f"Loading strip_{position}_30fps.json ...")
+            with open(
+                f"final_lights/strip_{position}_30fps.json", mode="r", encoding="utf-8"
+            ) as f:
+                global_vars.video = json.load(f)
+
             with lock:
                 global_vars.command = Command.READY
         else:
@@ -137,7 +154,7 @@ def command_thread(
             command_recv = get_command(lock, laptop)
             start(lock, barrier, command_recv, laptop)
             stop_pause_resume(lock, barrier, command_recv)
-            mapping(lock, barrier, command_recv, laptop)
+            mapping(lock, barrier, command_recv, laptop, strip)
             stream(lock, barrier, command_recv)
 
     except Exception as e:  # pylint: disable=broad-except

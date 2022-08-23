@@ -4,6 +4,7 @@ from enum import Enum
 SONGS = [
     ["Cloudless skies", "00:00:00.00"],
     ["Pixeldye", "00:02:19.52"],
+    ["Lost yourself", "00:12:16.818"],
     ["Lumiére", "00:12:22.87"],
     ["Your name in the stars", "00:19:36.21"],
     ["Regn", "00:23:08.31"],

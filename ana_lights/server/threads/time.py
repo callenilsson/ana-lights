@@ -19,8 +19,10 @@ def time_thread(lock: threading.Lock) -> None:
                     host=global_vars.laptop_ip,
                     version=4,
                 )
+                laptop_time = response.recv_time - response.offset
+
                 with lock:
-                    global_vars.offset = response.offset
+                    global_vars.offset = time.time() - laptop_time
         except Exception as e:
             print(type(e), e, "HEJ3")
-        time.sleep(1)
+        time.sleep(5)

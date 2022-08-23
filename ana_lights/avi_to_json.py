@@ -38,6 +38,8 @@ if __name__ == "__main__":
     # Write LED video pixel data to JSON file
     for strip_nbr, strip in enumerate(strips):
         with open(
-            file=f"final_lights/strip_{strip_nbr+1}.json", mode="w", encoding="utf-8"
+            file=f"final_lights/strip_{strip_nbr+1}_30fps.json",
+            mode="w",
+            encoding="utf-8",
         ) as f:
-            json.dump(strip, f)
+            json.dump(strip[::2], f)

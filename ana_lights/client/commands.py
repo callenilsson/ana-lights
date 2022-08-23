@@ -73,7 +73,7 @@ def start(lock: threading.Lock, pies: list[RaspberryPI]) -> None:
 
     # Ready
     times = []
-    clicks = 5
+    clicks = 4
     for i in range(clicks):
         input("Press enter to start: " + str(clicks - i))
         times.append(time.time())
