@@ -28,7 +28,7 @@ def time_thread(lock: threading.Lock) -> None:
 
                 # Add ntp sample diff of rpi and laptop time to list
                 ntp_samples.append(
-                    (response.recv_time - response.offset) - response.orig_time
+                    response.orig_time - (response.recv_time - response.offset)
                 )
 
                 # Take median of all ntp sample diffs as the final offset

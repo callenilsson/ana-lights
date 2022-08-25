@@ -3,12 +3,13 @@ from enum import Enum
 
 SONGS = [
     ["Cloudless skies", "00:00:00.00"],
-    ["Pixeldye", "00:02:19.52"],
+    ["Pixeldye", "00:04:15.827"],
     ["Lost yourself", "00:12:16.818"],
-    ["Lumiére", "00:12:22.87"],
-    ["Your name in the stars", "00:19:36.21"],
-    ["Regn", "00:23:08.31"],
-    ["You're somewhere", "00:27:23.13"],
+    ["Close to you", "00:17:18.082"],
+    ["Lumiére", "00:21:47.593"],
+    ["Regn", "00:26:23.286"],
+    ["Starlight", "00:30:34.589"],
+    ["You're somewhere", "00:35:30.639"],
 ]
 
 

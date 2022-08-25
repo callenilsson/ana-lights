@@ -122,9 +122,11 @@ def load_video_from_saved_position(
         del global_vars.video
 
         strip.status(red=0, green=0, blue=10)
-        print(f"Loading strip_{position}_30fps.json ...")
+        print(f"Loading strip_{position['position']}_30fps.json ...")
         with open(
-            f"final_lights/strip_{position}_30fps.json", mode="r", encoding="utf-8"
+            f"final_lights/strip_{position['position']}_30fps.json",
+            mode="r",
+            encoding="utf-8",
         ) as f:
             global_vars.video = json.load(f)
 

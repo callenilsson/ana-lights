@@ -23,6 +23,8 @@ def lights_thread(  # noqa
         with lock:
             get_command = global_vars.command
 
+        print(get_command)
+
         if get_command == Command.START:
             try:
                 with lock:
@@ -35,6 +37,12 @@ def lights_thread(  # noqa
                             )
                             * FPS
                         )
+                    )
+                    print(
+                        true_index,
+                        get_laptop_time(),
+                        global_vars.start_time,
+                        global_vars.song_start,
                     )
                 strip.render(global_vars.video[true_index])
             except Exception as e:

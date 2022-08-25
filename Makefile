@@ -38,7 +38,7 @@ send-lights:
 
 # Send code folder to a raspberry pi ip
 .PHONY: send-code
-send-lights:
+send-code:
 	sshpass -p "raspberry" scp -r ana_lights/client/ pi@$(ip):~/ana-lights/ana_lights/
 	sshpass -p "raspberry" scp -r ana_lights/server/ pi@$(ip):~/ana-lights/ana_lights/
 	sshpass -p "raspberry" scp -r ana_lights/avi_to_json.py pi@$(ip):~/ana-lights/ana_lights/avi_to_json.py
