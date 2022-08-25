@@ -22,6 +22,7 @@ class Command(Enum):
     START = "start"
     MAP = "map"
     MAP_SELECT = "map_select"
+    LOAD = "load"
     READY = "ready"
     NEXT = "next"
 

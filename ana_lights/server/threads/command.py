@@ -103,6 +103,35 @@ def mapping(
             raise ValueError(f"Did not receive {Command.MAP_SELECT} from laptop.")
 
 
+def load_video_from_saved_position(
+    lock: threading.Lock,
+    command_recv: Command,
+    strip: LEDStrip,
+) -> None:
+    """Hej."""
+    if command_recv == Command.LOAD and len(global_vars.video) == 0:
+        with lock:
+            global_vars.command = Command.STOP
+
+        strip.black()
+        strip.status(red=10, green=10, blue=0)
+
+        with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
+            position = json.load(f)
+
+        del global_vars.video
+
+        strip.status(red=0, green=0, blue=10)
+        print(f"Loading strip_{position}_30fps.json ...")
+        with open(
+            f"final_lights/strip_{position}_30fps.json", mode="r", encoding="utf-8"
+        ) as f:
+            global_vars.video = json.load(f)
+
+        with lock:
+            global_vars.command = Command.READY
+
+
 def stream(
     lock: threading.Lock,
     barrier: threading.Barrier,
@@ -155,6 +184,7 @@ def command_thread(
             start(lock, barrier, command_recv, laptop)
             stop_pause_resume(lock, barrier, command_recv)
             mapping(lock, barrier, command_recv, laptop, strip)
+            load_video_from_saved_position(lock, command_recv, strip)
             stream(lock, barrier, command_recv)
 
     except Exception as e:  # pylint: disable=broad-except

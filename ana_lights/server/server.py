@@ -33,12 +33,12 @@ if __name__ == "__main__":
     print("Loading video...")
     with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
         position = json.load(f)
-    with open(
-        f"final_lights/strip_{position['position']}_30fps.json",
-        mode="r",
-        encoding="utf-8",
-    ) as f:
-        global_vars.video = json.load(f)
+    # with open(
+    #     f"final_lights/strip_{position['position']}_30fps.json",
+    #     mode="r",
+    #     encoding="utf-8",
+    # ) as f:
+    #     global_vars.video = json.load(f)
 
     threading.Thread(target=time_thread, args=(lock,)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip)).start()

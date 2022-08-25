@@ -31,6 +31,8 @@ if __name__ == "__main__":  # noqa
     print("---------------")
     print("Connected to RPi IPs:", found_pies)
 
+    if action == "1":
+        send_command(lock, pies_command, Command.LOAD)
     if action == "2":
         map_positions(lock, pies_command)
 
