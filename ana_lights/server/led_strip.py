@@ -7,6 +7,7 @@ class LEDStrip:
     """LED Strip wrapper class."""
 
     strip: Adafruit_NeoPixel
+    led_count: int
 
     def __init__(
         self,
@@ -29,6 +30,7 @@ class LEDStrip:
             channel=channel,
         )
         self.strip.begin()
+        self.led_count = led_count
 
     def render(self, pixels: list[int]) -> None:
         """Render <pixels> on to the LED <strip>.

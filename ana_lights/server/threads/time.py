@@ -7,13 +7,12 @@ import ntplib
 from . import global_vars
 
 # pylint: disable=broad-except
-# pylint: disable=global-statement
 
 
 def time_thread(lock: threading.Lock) -> None:
     """Thread updating the time offset to the laptop."""
     ntp_client = ntplib.NTPClient()
-    ntp_samples: List[float] = []
+    ntp_offsets: List[float] = []
     while True:
         # print("FPS:", global_vars.fps)
         try:
@@ -22,18 +21,16 @@ def time_thread(lock: threading.Lock) -> None:
                     host=global_vars.laptop_ip, version=4
                 )
 
-                # If there are more than 20 samples, pop the first sample
-                if len(ntp_samples) > 20:
-                    ntp_samples.pop(0)
+                # If there are more than 20 offset samples, pop the first sample
+                if len(ntp_offsets) > 20:
+                    ntp_offsets.pop(0)
 
-                # Add ntp sample diff of rpi and laptop time to list
-                ntp_samples.append(
-                    response.orig_time - (response.recv_time - response.offset)
-                )
+                # Add ntp offset between rpi and laptop time to list
+                ntp_offsets.append(response.offset)
 
-                # Take median of all ntp sample diffs as the final offset
+                # Take median of all ntp offsets as the final
                 # between rpi and laptop time
-                offset = median(ntp_samples)
+                offset = median(ntp_offsets)
 
                 with lock:
                     global_vars.offset = offset

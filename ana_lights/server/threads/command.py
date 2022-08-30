@@ -3,8 +3,11 @@ import time
 import socket
 import threading
 import json
+from typing import List
+import numpy as np
 from . import global_vars
 from ..led_strip import LEDStrip
+from ...color import Color
 from ...enums import Command, Port
 
 
@@ -81,21 +84,15 @@ def mapping(
                 global_vars.command = Command.MAP_SELECT
                 barrier.wait()
 
+            # Get position from laptop
             position = laptop.recv(1024).decode("utf-8")
-            strip.black()
-            strip.status(red=10, green=10, blue=0)
 
+            # Write position to file
             with open("mapping/pi_position.json", mode="w", encoding="utf-8") as f:
                 f.write(json.dumps({"position": position}))
 
-            del global_vars.video
-
-            strip.status(red=0, green=0, blue=10)
-            print(f"Loading strip_{position}_30fps.json ...")
-            with open(
-                f"final_lights/strip_{position}_30fps.json", mode="r", encoding="utf-8"
-            ) as f:
-                global_vars.video = json.load(f)
+            # Load video at position
+            load_video(lock, position, strip)
 
             with lock:
                 global_vars.command = Command.READY
@@ -113,25 +110,73 @@ def load_video_from_saved_position(
         with lock:
             global_vars.command = Command.STOP
 
-        strip.black()
-        strip.status(red=10, green=10, blue=0)
-
+        # Read position from file
         with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
             position = json.load(f)
 
-        del global_vars.video
-
-        strip.status(red=0, green=0, blue=10)
-        print(f"Loading strip_{position['position']}_30fps.json ...")
-        with open(
-            f"final_lights/strip_{position['position']}_30fps.json",
-            mode="r",
-            encoding="utf-8",
-        ) as f:
-            global_vars.video = json.load(f)
+        # Load video at position
+        load_video(lock, position["position"], strip)
 
         with lock:
             global_vars.command = Command.READY
+
+
+def load_video(lock: threading.Lock, position: str, strip: LEDStrip) -> None:
+    """Hej."""
+    # Set strip status to yellow
+    strip.status(red=10, green=10, blue=0)
+
+    # Remove old video from RAM
+    with lock:
+        del global_vars.video
+
+    # Read number of lines (frames) in video file
+    nbr_lines = 0
+    with open(file=f"final_lights/strip_{position}.txt", mode="r", encoding="utf-8") as f:
+        for i, _ in enumerate(f):
+            # Skip every other frame to only get 30 fps
+            if i % 2 == 0:
+                continue
+            nbr_lines += 1
+    print("Will read", nbr_lines, "lines from video file")
+
+    # Initialize video list
+    video: List[List[int]] = [[]] * nbr_lines
+
+    # Load video from file
+    count = 0
+    with open(file=f"final_lights/strip_{position}.txt", mode="r", encoding="utf-8") as f:
+        for i, line in enumerate(f):  # type: ignore
+            # Skip every other frame to only get 30 fps
+            if i % 2 == 0:
+                continue
+
+            # Render load progress on strip
+            if count % int(nbr_lines / 100) == 0:
+                percent = count / nbr_lines
+
+                progress_pixels = np.zeros(strip.led_count)
+                progress_pixels[: int(percent * int(strip.led_count / 2))] = 1
+                progress_pixels[
+                    int(strip.led_count / 2) : int(strip.led_count / 2)  # noqa
+                    + int(percent * int(strip.led_count / 2))
+                ] = 1
+
+                strip.render(
+                    pixels=[
+                        Color(red=0, green=0, blue=int(10 * val))
+                        for val in progress_pixels[::-1]
+                    ]
+                )
+            video[count] = json.loads(line)  # type: ignore
+            count += 1
+
+    # Update global video variable
+    with lock:
+        global_vars.video = video
+
+    # Set strip status to green
+    strip.status(red=10, green=0, blue=0)
 
 
 def stream(
@@ -190,6 +235,6 @@ def command_thread(
             stream(lock, barrier, command_recv)
 
     except Exception as e:  # pylint: disable=broad-except
-        print(e, "HEJ0")
+        print(type(e), e, "HEJ0")
         server.close()
         laptop.close()

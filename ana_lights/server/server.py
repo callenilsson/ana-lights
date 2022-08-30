@@ -1,6 +1,5 @@
 """Raspberry pi server."""
 import threading
-import json
 from .led_strip import LEDStrip
 from .threads.time import time_thread
 from .threads.lights import lights_thread
@@ -8,8 +7,6 @@ from .threads.command import command_thread
 from .threads.stream import stream_thread
 from .threads import global_vars
 from ..enums import LEDSettings
-
-# pylint: disable=global-statement, global-at-module-level
 
 
 if __name__ == "__main__":
@@ -29,16 +26,6 @@ if __name__ == "__main__":
     )
     strip.black()
     strip.status(red=0, green=0, blue=10)
-
-    print("Loading video...")
-    with open("mapping/pi_position.json", mode="r", encoding="utf-8") as f:
-        position = json.load(f)
-    # with open(
-    #     f"final_lights/strip_{position['position']}_30fps.json",
-    #     mode="r",
-    #     encoding="utf-8",
-    # ) as f:
-    #     global_vars.video = json.load(f)
 
     threading.Thread(target=time_thread, args=(lock,)).start()
     threading.Thread(target=lights_thread, args=(lock, barrier, strip)).start()

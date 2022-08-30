@@ -31,16 +31,21 @@ laptop:
 rpi:
 	sudo /usr/bin/python -m ana_lights.server.server
 
+# Convert video to text files
+.PHONY: convert-video
+convert-video:
+	poetry run python -m ana_lights.convert_video
+
 # Send final_lights folder to a raspberry pi ip
 .PHONY: send-lights
 send-lights:
-	sshpass -p "raspberry" scp -r final_lights/ pi@$(ip):~/ana-lights/
+	scp -r final_lights/ pi@$(ip):~/ana-lights/
 
 # Send code folder to a raspberry pi ip
 .PHONY: send-code
 send-code:
 	sshpass -p "raspberry" scp -r ana_lights/client/ pi@$(ip):~/ana-lights/ana_lights/
 	sshpass -p "raspberry" scp -r ana_lights/server/ pi@$(ip):~/ana-lights/ana_lights/
-	sshpass -p "raspberry" scp -r ana_lights/avi_to_json.py pi@$(ip):~/ana-lights/ana_lights/avi_to_json.py
+	sshpass -p "raspberry" scp -r ana_lights/convert_video.py pi@$(ip):~/ana-lights/ana_lights/convert_video.py
 	sshpass -p "raspberry" scp -r ana_lights/color.py pi@$(ip):~/ana-lights/ana_lights/color.py
 	sshpass -p "raspberry" scp -r ana_lights/enums.py pi@$(ip):~/ana-lights/ana_lights/enums.py
