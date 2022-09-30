@@ -8,6 +8,7 @@ python-versions = ">=3.6.2"
 
 [package.dependencies]
 lazy-object-proxy = ">=1.4.0"
+setuptools = ">=20.0"
 typing-extensions = {version = ">=3.10", markers = "python_version < \"3.10\""}
 wrapt = ">=1.11,<1.14"
 
@@ -26,9 +27,9 @@ PyYAML = ">=5.3.1"
 stevedore = ">=1.20.0"
 
 [package.extras]
-test = ["coverage (>=4.5.4)", "fixtures (>=3.0.0)", "flake8 (>=4.0.0)", "stestr (>=2.5.0)", "testscenarios (>=0.5.0)", "testtools (>=2.3.0)", "toml", "beautifulsoup4 (>=4.8.0)", "pylint (==1.9.4)"]
+test = ["beautifulsoup4 (>=4.8.0)", "coverage (>=4.5.4)", "fixtures (>=3.0.0)", "flake8 (>=4.0.0)", "pylint (==1.9.4)", "stestr (>=2.5.0)", "testscenarios (>=0.5.0)", "testtools (>=2.3.0)", "toml"]
 toml = ["toml"]
-yaml = ["pyyaml"]
+yaml = ["PyYAML"]
 
 [[package]]
 name = "black"
@@ -141,17 +142,17 @@ pillow = ">=8.3.2"
 all-plugins = ["astropy", "av", "imageio-ffmpeg", "opencv-python", "psutil", "tifffile"]
 all-plugins-pypy = ["av", "imageio-ffmpeg", "psutil", "tifffile"]
 build = ["wheel"]
-dev = ["invoke", "pytest", "pytest-cov", "fsspec", "black", "flake8"]
-docs = ["sphinx", "numpydoc", "pydata-sphinx-theme"]
+dev = ["black", "flake8", "fsspec[github]", "invoke", "pytest", "pytest-cov"]
+docs = ["numpydoc", "pydata-sphinx-theme", "sphinx"]
 ffmpeg = ["imageio-ffmpeg", "psutil"]
 fits = ["astropy"]
-full = ["astropy", "av", "black", "flake8", "fsspec", "gdal", "imageio-ffmpeg", "invoke", "itk", "numpydoc", "opencv-python", "psutil", "pydata-sphinx-theme", "pytest", "pytest-cov", "sphinx", "tifffile", "wheel"]
+full = ["astropy", "av", "black", "flake8", "fsspec[github]", "gdal", "imageio-ffmpeg", "invoke", "itk", "numpydoc", "opencv-python", "psutil", "pydata-sphinx-theme", "pytest", "pytest-cov", "sphinx", "tifffile", "wheel"]
 gdal = ["gdal"]
 itk = ["itk"]
 linting = ["black", "flake8"]
 opencv = ["opencv-python"]
 pyav = ["av"]
-test = ["invoke", "pytest", "pytest-cov", "fsspec"]
+test = ["fsspec[github]", "invoke", "pytest", "pytest-cov"]
 tifffile = ["tifffile"]
 
 [[package]]
@@ -163,18 +164,18 @@ optional = false
 python-versions = ">=3.6.1,<4.0"
 
 [package.extras]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
-requirements_deprecated_finder = ["pipreqs", "pip-api"]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
+pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
 plugins = ["setuptools"]
+requirements_deprecated_finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "joblib"
-version = "1.1.0"
+version = "1.2.0"
 description = "Lightweight pipelining with Python functions"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [[package]]
 name = "lazy-object-proxy"
@@ -380,12 +381,12 @@ pydocstyle = ">=6.1.1"
 pyflakes = ">=2.4.0"
 
 [package.extras]
-all = ["pylint", "eradicate", "radon", "mypy", "vulture"]
+all = ["eradicate", "mypy", "pylint", "radon", "vulture"]
 eradicate = ["eradicate"]
 mypy = ["mypy"]
 pylint = ["pylint"]
 radon = ["radon"]
-tests = ["pytest", "pytest-mypy", "eradicate (>=2.0.0)", "radon (>=5.1.0)", "mypy", "pylint (>=2.11.1)", "pylama-quotes", "vulture", "types-setuptools"]
+tests = ["eradicate (>=2.0.0)", "mypy", "pylama-quotes", "pylint (>=2.11.1)", "pytest", "pytest-mypy", "radon (>=5.1.0)", "types-setuptools", "vulture"]
 vulture = ["vulture"]
 
 [[package]]
@@ -578,7 +579,7 @@ pyobjc-framework-Vision = {version = "8.3", markers = "platform_release >= \"17.
 pyobjc-framework-WebKit = "8.3"
 
 [package.extras]
-allbindings = ["pyobjc-core (==8.3)", "pyobjc-framework-libdispatch (==8.3)", "pyobjc-framework-Accessibility (==8.3)", "pyobjc-framework-AdServices (==8.3)", "pyobjc-framework-AdSupport (==8.3)", "pyobjc-framework-AppTrackingTransparency (==8.3)", "pyobjc-framework-AudioVideoBridging (==8.3)", "pyobjc-framework-AuthenticationServices (==8.3)", "pyobjc-framework-AutomaticAssessmentConfiguration (==8.3)", "pyobjc-framework-AVKit (==8.3)", "pyobjc-framework-AVFoundation (==8.3)", "pyobjc-framework-Accounts (==8.3)", "pyobjc-framework-AddressBook (==8.3)", "pyobjc-framework-AppleScriptKit (==8.3)", "pyobjc-framework-AppleScriptObjC (==8.3)", "pyobjc-framework-ApplicationServices (==8.3)", "pyobjc-framework-Automator (==8.3)", "pyobjc-framework-BusinessChat (==8.3)", "pyobjc-framework-CFNetwork (==8.3)", "pyobjc-framework-CalendarStore (==8.3)", "pyobjc-framework-CallKit (==8.3)", "pyobjc-framework-ClassKit (==8.3)", "pyobjc-framework-CloudKit (==8.3)", "pyobjc-framework-Cocoa (==8.3)", "pyobjc-framework-Collaboration (==8.3)", "pyobjc-framework-ColorSync (==8.3)", "pyobjc-framework-Contacts (==8.3)", "pyobjc-framework-ContactsUI (==8.3)", "pyobjc-framework-CoreAudio (==8.3)", "pyobjc-framework-CoreAudioKit (==8.3)", "pyobjc-framework-CoreBluetooth (==8.3)", "pyobjc-framework-CoreData (==8.3)", "pyobjc-framework-CoreHaptics (==8.3)", "pyobjc-framework-CoreLocation (==8.3)", "pyobjc-framework-CoreMedia (==8.3)", "pyobjc-framework-CoreMediaIO (==8.3)", "pyobjc-framework-CoreMIDI (==8.3)", "pyobjc-framework-CoreML (==8.3)", "pyobjc-framework-CoreMotion (==8.3)", "pyobjc-framework-CoreServices (==8.3)", "pyobjc-framework-CoreSpotlight (==8.3)", "pyobjc-framework-CoreText (==8.3)", "pyobjc-framework-CoreWLAN (==8.3)", "pyobjc-framework-CryptoTokenKit (==8.3)", "pyobjc-framework-DataDetection (==8.3)", "pyobjc-framework-DeviceCheck (==8.3)", "pyobjc-framework-DictionaryServices (==8.3)", "pyobjc-framework-DiscRecording (==8.3)", "pyobjc-framework-DiscRecordingUI (==8.3)", "pyobjc-framework-DiskArbitration (==8.3)", "pyobjc-framework-DVDPlayback (==8.3)", "pyobjc-framework-EventKit (==8.3)", "pyobjc-framework-ExceptionHandling (==8.3)", "pyobjc-framework-ExecutionPolicy (==8.3)", "pyobjc-framework-ExternalAccessory (==8.3)", "pyobjc-framework-FileProvider (==8.3)", "pyobjc-framework-FileProviderUI (==8.3)", "pyobjc-framework-FSEvents (==8.3)", "pyobjc-framework-FinderSync (==8.3)", "pyobjc-framework-GameCenter (==8.3)", "pyobjc-framework-GameController (==8.3)", "pyobjc-framework-IMServicePlugIn (==8.3)", "pyobjc-framework-InputMethodKit (==8.3)", "pyobjc-framework-ImageCaptureCore (==8.3)", "pyobjc-framework-Intents (==8.3)", "pyobjc-framework-IntentsUI (==8.3)", "pyobjc-framework-InstallerPlugins (==8.3)", "pyobjc-framework-InstantMessage (==8.3)", "pyobjc-framework-IOSurface (==8.3)", "pyobjc-framework-KernelManagement (==8.3)", "pyobjc-framework-LatentSemanticMapping (==8.3)", "pyobjc-framework-LaunchServices (==8.3)", "pyobjc-framework-LinkPresentation (==8.3)", "pyobjc-framework-LocalAuthentication (==8.3)", "pyobjc-framework-LocalAuthenticationEmbeddedUI (==8.3)", "pyobjc-framework-MailKit (==8.3)", "pyobjc-framework-MapKit (==8.3)", "pyobjc-framework-MediaAccessibility (==8.3)", "pyobjc-framework-MediaLibrary (==8.3)", "pyobjc-framework-MediaPlayer (==8.3)", "pyobjc-framework-MediaToolbox (==8.3)", "pyobjc-framework-Message (==8.3)", "pyobjc-framework-Metal (==8.3)", "pyobjc-framework-MetalKit (==8.3)", "pyobjc-framework-MetalPerformanceShaders (==8.3)", "pyobjc-framework-MetalPerformanceShadersGraph (==8.3)", "pyobjc-framework-MetricKit (==8.3)", "pyobjc-framework-MLCompute (==8.3)", "pyobjc-framework-ModelIO (==8.3)", "pyobjc-framework-MultipeerConnectivity (==8.3)", "pyobjc-framework-NaturalLanguage (==8.3)", "pyobjc-framework-NetFS (==8.3)", "pyobjc-framework-Network (==8.3)", "pyobjc-framework-NetworkExtension (==8.3)", "pyobjc-framework-NotificationCenter (==8.3)", "pyobjc-framework-OpenDirectory (==8.3)", "pyobjc-framework-OSAKit (==8.3)", "pyobjc-framework-OSLog (==8.3)", "pyobjc-framework-PassKit (==8.3)", "pyobjc-framework-PencilKit (==8.3)", "pyobjc-framework-Photos (==8.3)", "pyobjc-framework-PhotosUI (==8.3)", "pyobjc-framework-PreferencePanes (==8.3)", "pyobjc-framework-PubSub (==8.3)", "pyobjc-framework-PushKit (==8.3)", "pyobjc-framework-Quartz (==8.3)", "pyobjc-framework-QuickLookThumbnailing (==8.3)", "pyobjc-framework-ReplayKit (==8.3)", "pyobjc-framework-SafariServices (==8.3)", "pyobjc-framework-ScreenSaver (==8.3)", "pyobjc-framework-ScreenTime (==8.3)", "pyobjc-framework-ScriptingBridge (==8.3)", "pyobjc-framework-Security (==8.3)", "pyobjc-framework-SecurityFoundation (==8.3)", "pyobjc-framework-SecurityInterface (==8.3)", "pyobjc-framework-SearchKit (==8.3)", "pyobjc-framework-ServerNotification (==8.3)", "pyobjc-framework-ServiceManagement (==8.3)", "pyobjc-framework-ShazamKit (==8.3)", "pyobjc-framework-Social (==8.3)", "pyobjc-framework-Speech (==8.3)", "pyobjc-framework-SpriteKit (==8.3)", "pyobjc-framework-StoreKit (==8.3)", "pyobjc-framework-SyncServices (==8.3)", "pyobjc-framework-SystemConfiguration (==8.3)", "pyobjc-framework-WebKit (==8.3)", "pyobjc-framework-GameKit (==8.3)", "pyobjc-framework-GameplayKit (==8.3)", "pyobjc-framework-SceneKit (==8.3)", "pyobjc-framework-SoundAnalysis (==8.3)", "pyobjc-framework-SystemExtensions (==8.3)", "pyobjc-framework-UniformTypeIdentifiers (==8.3)", "pyobjc-framework-UserNotifications (==8.3)", "pyobjc-framework-UserNotificationsUI (==8.3)", "pyobjc-framework-VideoSubscriberAccount (==8.3)", "pyobjc-framework-VideoToolbox (==8.3)", "pyobjc-framework-Virtualization (==8.3)", "pyobjc-framework-Vision (==8.3)", "pyobjc-framework-iTunesLibrary (==8.3)"]
+allbindings = ["pyobjc-core (==8.3)", "pyobjc-framework-AVFoundation (==8.3)", "pyobjc-framework-AVKit (==8.3)", "pyobjc-framework-Accessibility (==8.3)", "pyobjc-framework-Accounts (==8.3)", "pyobjc-framework-AdServices (==8.3)", "pyobjc-framework-AdSupport (==8.3)", "pyobjc-framework-AddressBook (==8.3)", "pyobjc-framework-AppTrackingTransparency (==8.3)", "pyobjc-framework-AppleScriptKit (==8.3)", "pyobjc-framework-AppleScriptObjC (==8.3)", "pyobjc-framework-ApplicationServices (==8.3)", "pyobjc-framework-AudioVideoBridging (==8.3)", "pyobjc-framework-AuthenticationServices (==8.3)", "pyobjc-framework-AutomaticAssessmentConfiguration (==8.3)", "pyobjc-framework-Automator (==8.3)", "pyobjc-framework-BusinessChat (==8.3)", "pyobjc-framework-CFNetwork (==8.3)", "pyobjc-framework-CalendarStore (==8.3)", "pyobjc-framework-CallKit (==8.3)", "pyobjc-framework-ClassKit (==8.3)", "pyobjc-framework-CloudKit (==8.3)", "pyobjc-framework-Cocoa (==8.3)", "pyobjc-framework-Collaboration (==8.3)", "pyobjc-framework-ColorSync (==8.3)", "pyobjc-framework-Contacts (==8.3)", "pyobjc-framework-ContactsUI (==8.3)", "pyobjc-framework-CoreAudio (==8.3)", "pyobjc-framework-CoreAudioKit (==8.3)", "pyobjc-framework-CoreBluetooth (==8.3)", "pyobjc-framework-CoreData (==8.3)", "pyobjc-framework-CoreHaptics (==8.3)", "pyobjc-framework-CoreLocation (==8.3)", "pyobjc-framework-CoreMIDI (==8.3)", "pyobjc-framework-CoreML (==8.3)", "pyobjc-framework-CoreMedia (==8.3)", "pyobjc-framework-CoreMediaIO (==8.3)", "pyobjc-framework-CoreMotion (==8.3)", "pyobjc-framework-CoreServices (==8.3)", "pyobjc-framework-CoreSpotlight (==8.3)", "pyobjc-framework-CoreText (==8.3)", "pyobjc-framework-CoreWLAN (==8.3)", "pyobjc-framework-CryptoTokenKit (==8.3)", "pyobjc-framework-DVDPlayback (==8.3)", "pyobjc-framework-DataDetection (==8.3)", "pyobjc-framework-DeviceCheck (==8.3)", "pyobjc-framework-DictionaryServices (==8.3)", "pyobjc-framework-DiscRecording (==8.3)", "pyobjc-framework-DiscRecordingUI (==8.3)", "pyobjc-framework-DiskArbitration (==8.3)", "pyobjc-framework-EventKit (==8.3)", "pyobjc-framework-ExceptionHandling (==8.3)", "pyobjc-framework-ExecutionPolicy (==8.3)", "pyobjc-framework-ExternalAccessory (==8.3)", "pyobjc-framework-FSEvents (==8.3)", "pyobjc-framework-FileProvider (==8.3)", "pyobjc-framework-FileProviderUI (==8.3)", "pyobjc-framework-FinderSync (==8.3)", "pyobjc-framework-GameCenter (==8.3)", "pyobjc-framework-GameController (==8.3)", "pyobjc-framework-GameKit (==8.3)", "pyobjc-framework-GameplayKit (==8.3)", "pyobjc-framework-IMServicePlugIn (==8.3)", "pyobjc-framework-IOSurface (==8.3)", "pyobjc-framework-ImageCaptureCore (==8.3)", "pyobjc-framework-InputMethodKit (==8.3)", "pyobjc-framework-InstallerPlugins (==8.3)", "pyobjc-framework-InstantMessage (==8.3)", "pyobjc-framework-Intents (==8.3)", "pyobjc-framework-IntentsUI (==8.3)", "pyobjc-framework-KernelManagement (==8.3)", "pyobjc-framework-LatentSemanticMapping (==8.3)", "pyobjc-framework-LaunchServices (==8.3)", "pyobjc-framework-LinkPresentation (==8.3)", "pyobjc-framework-LocalAuthentication (==8.3)", "pyobjc-framework-LocalAuthenticationEmbeddedUI (==8.3)", "pyobjc-framework-MLCompute (==8.3)", "pyobjc-framework-MailKit (==8.3)", "pyobjc-framework-MapKit (==8.3)", "pyobjc-framework-MediaAccessibility (==8.3)", "pyobjc-framework-MediaLibrary (==8.3)", "pyobjc-framework-MediaPlayer (==8.3)", "pyobjc-framework-MediaToolbox (==8.3)", "pyobjc-framework-Message (==8.3)", "pyobjc-framework-Metal (==8.3)", "pyobjc-framework-MetalKit (==8.3)", "pyobjc-framework-MetalPerformanceShaders (==8.3)", "pyobjc-framework-MetalPerformanceShadersGraph (==8.3)", "pyobjc-framework-MetricKit (==8.3)", "pyobjc-framework-ModelIO (==8.3)", "pyobjc-framework-MultipeerConnectivity (==8.3)", "pyobjc-framework-NaturalLanguage (==8.3)", "pyobjc-framework-NetFS (==8.3)", "pyobjc-framework-Network (==8.3)", "pyobjc-framework-NetworkExtension (==8.3)", "pyobjc-framework-NotificationCenter (==8.3)", "pyobjc-framework-OSAKit (==8.3)", "pyobjc-framework-OSLog (==8.3)", "pyobjc-framework-OpenDirectory (==8.3)", "pyobjc-framework-PassKit (==8.3)", "pyobjc-framework-PencilKit (==8.3)", "pyobjc-framework-Photos (==8.3)", "pyobjc-framework-PhotosUI (==8.3)", "pyobjc-framework-PreferencePanes (==8.3)", "pyobjc-framework-PubSub (==8.3)", "pyobjc-framework-PushKit (==8.3)", "pyobjc-framework-Quartz (==8.3)", "pyobjc-framework-QuickLookThumbnailing (==8.3)", "pyobjc-framework-ReplayKit (==8.3)", "pyobjc-framework-SafariServices (==8.3)", "pyobjc-framework-SceneKit (==8.3)", "pyobjc-framework-ScreenSaver (==8.3)", "pyobjc-framework-ScreenTime (==8.3)", "pyobjc-framework-ScriptingBridge (==8.3)", "pyobjc-framework-SearchKit (==8.3)", "pyobjc-framework-Security (==8.3)", "pyobjc-framework-SecurityFoundation (==8.3)", "pyobjc-framework-SecurityInterface (==8.3)", "pyobjc-framework-ServerNotification (==8.3)", "pyobjc-framework-ServiceManagement (==8.3)", "pyobjc-framework-ShazamKit (==8.3)", "pyobjc-framework-Social (==8.3)", "pyobjc-framework-SoundAnalysis (==8.3)", "pyobjc-framework-Speech (==8.3)", "pyobjc-framework-SpriteKit (==8.3)", "pyobjc-framework-StoreKit (==8.3)", "pyobjc-framework-SyncServices (==8.3)", "pyobjc-framework-SystemConfiguration (==8.3)", "pyobjc-framework-SystemExtensions (==8.3)", "pyobjc-framework-UniformTypeIdentifiers (==8.3)", "pyobjc-framework-UserNotifications (==8.3)", "pyobjc-framework-UserNotificationsUI (==8.3)", "pyobjc-framework-VideoSubscriberAccount (==8.3)", "pyobjc-framework-VideoToolbox (==8.3)", "pyobjc-framework-Virtualization (==8.3)", "pyobjc-framework-Vision (==8.3)", "pyobjc-framework-WebKit (==8.3)", "pyobjc-framework-iTunesLibrary (==8.3)", "pyobjc-framework-libdispatch (==8.3)"]
 
 [[package]]
 name = "pyobjc-core"
@@ -2380,10 +2381,10 @@ scipy = ">=1.1.0"
 threadpoolctl = ">=2.0.0"
 
 [package.extras]
-benchmark = ["matplotlib (>=2.2.3)", "pandas (>=0.25.0)", "memory-profiler (>=0.57.0)"]
-docs = ["matplotlib (>=2.2.3)", "scikit-image (>=0.14.5)", "pandas (>=0.25.0)", "seaborn (>=0.9.0)", "memory-profiler (>=0.57.0)", "sphinx (>=4.0.1)", "sphinx-gallery (>=0.7.0)", "numpydoc (>=1.0.0)", "Pillow (>=7.1.2)", "sphinx-prompt (>=1.3.0)", "sphinxext-opengraph (>=0.4.2)"]
-examples = ["matplotlib (>=2.2.3)", "scikit-image (>=0.14.5)", "pandas (>=0.25.0)", "seaborn (>=0.9.0)"]
-tests = ["matplotlib (>=2.2.3)", "scikit-image (>=0.14.5)", "pandas (>=0.25.0)", "pytest (>=5.0.1)", "pytest-cov (>=2.9.0)", "flake8 (>=3.8.2)", "black (>=21.6b0)", "mypy (>=0.770)", "pyamg (>=4.0.0)"]
+benchmark = ["matplotlib (>=2.2.3)", "memory-profiler (>=0.57.0)", "pandas (>=0.25.0)"]
+docs = ["Pillow (>=7.1.2)", "matplotlib (>=2.2.3)", "memory-profiler (>=0.57.0)", "numpydoc (>=1.0.0)", "pandas (>=0.25.0)", "scikit-image (>=0.14.5)", "seaborn (>=0.9.0)", "sphinx (>=4.0.1)", "sphinx-gallery (>=0.7.0)", "sphinx-prompt (>=1.3.0)", "sphinxext-opengraph (>=0.4.2)"]
+examples = ["matplotlib (>=2.2.3)", "pandas (>=0.25.0)", "scikit-image (>=0.14.5)", "seaborn (>=0.9.0)"]
+tests = ["black (>=21.6b0)", "flake8 (>=3.8.2)", "matplotlib (>=2.2.3)", "mypy (>=0.770)", "pandas (>=0.25.0)", "pyamg (>=4.0.0)", "pytest (>=5.0.1)", "pytest-cov (>=2.9.0)", "scikit-image (>=0.14.5)"]
 
 [[package]]
 name = "scikit-video"
@@ -2408,6 +2409,19 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 numpy = ">=1.16.5"
+
+[[package]]
+name = "setuptools"
+version = "65.4.1"
+description = "Easily download, build, install, upgrade, and uninstall Python packages"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-hoverxref (<2)", "sphinx-inline-tabs", "sphinx-notfound-page (==0.8.3)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
+testing = ["build[virtualenv]", "filelock (>=3.4.0)", "flake8 (<5)", "flake8-2020", "ini2toml[lite] (>=0.9)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "mock", "pip (>=19.1)", "pip-run (>=8.8)", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)", "pytest-perf", "pytest-xdist", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
+testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
 
 [[package]]
 name = "six"
@@ -2567,8 +2581,8 @@ isort = [
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
 ]
 joblib = [
-    {file = "joblib-1.1.0-py2.py3-none-any.whl", hash = "sha256:f21f109b3c7ff9d95f8387f752d0d9c34a02aa2f7060c2135f465da0e5160ff6"},
-    {file = "joblib-1.1.0.tar.gz", hash = "sha256:4158fcecd13733f8be669be0683b96ebdbbd38d23559f54dca7205aea1bf1e35"},
+    {file = "joblib-1.2.0-py3-none-any.whl", hash = "sha256:091138ed78f800342968c523bdde947e7a305b8594b910a0fea2ab83c3c6d385"},
+    {file = "joblib-1.2.0.tar.gz", hash = "sha256:e1cee4a79e4af22881164f218d4311f60074197fb707e082e803b61f6d137018"},
 ]
 lazy-object-proxy = [
     {file = "lazy-object-proxy-1.7.1.tar.gz", hash = "sha256:d609c75b986def706743cdebe5e47553f4a5a1da9c5ff66d76013ef396b5a8a4"},
@@ -2760,7 +2774,6 @@ pymsgbox = [
 ]
 pynput = [
     {file = "pynput-1.7.6-py2.py3-none-any.whl", hash = "sha256:19861b2a0c430d646489852f89500e0c9332e295f2c020e7c2775e7046aa2e2f"},
-    {file = "pynput-1.7.6-py3.9.egg", hash = "sha256:264429fbe676e98e9050ad26a7017453bdd08768adb25cafb918347cf9f1eb4a"},
     {file = "pynput-1.7.6.tar.gz", hash = "sha256:3a5726546da54116b687785d38b1db56997ce1d28e53e8d22fc656d8b92e533c"},
 ]
 pyobjc = [
@@ -3552,6 +3565,13 @@ pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:f84fbc98b019fef2ee9a1cb3ce93e3187a6df0b2538a651bfb890254ba9f90b5"},
     {file = "PyYAML-6.0-cp310-cp310-win32.whl", hash = "sha256:2cd5df3de48857ed0544b34e2d40e9fac445930039f3cfe4bcc592a1f836d513"},
     {file = "PyYAML-6.0-cp310-cp310-win_amd64.whl", hash = "sha256:daf496c58a8c52083df09b80c860005194014c3698698d1a57cbcfa182142a3a"},
+    {file = "PyYAML-6.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:d4b0ba9512519522b118090257be113b9468d804b19d63c71dbcf4a48fa32358"},
+    {file = "PyYAML-6.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:81957921f441d50af23654aa6c5e5eaf9b06aba7f0a19c18a538dc7ef291c5a1"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:afa17f5bc4d1b10afd4466fd3a44dc0e245382deca5b3c353d8b757f9e3ecb8d"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:dbad0e9d368bb989f4515da330b88a057617d16b6a8245084f1b05400f24609f"},
+    {file = "PyYAML-6.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:432557aa2c09802be39460360ddffd48156e30721f5e8d917f01d31694216782"},
+    {file = "PyYAML-6.0-cp311-cp311-win32.whl", hash = "sha256:bfaef573a63ba8923503d27530362590ff4f576c626d86a9fed95822a8255fd7"},
+    {file = "PyYAML-6.0-cp311-cp311-win_amd64.whl", hash = "sha256:01b45c0191e6d66c470b6cf1b9531a771a83c1c4208272ead47a3ae4f2f603bf"},
     {file = "PyYAML-6.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:897b80890765f037df3403d22bab41627ca8811ae55e9a722fd0392850ec4d86"},
     {file = "PyYAML-6.0-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:50602afada6d6cbfad699b0c7bb50d5ccffa7e46a3d738092afddc1f9758427f"},
     {file = "PyYAML-6.0-cp36-cp36m-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:48c346915c114f5fdb3ead70312bd042a953a8ce5c7106d5bfb1a5254e47da92"},
@@ -3641,6 +3661,10 @@ scipy = [
     {file = "scipy-1.6.1-cp39-cp39-win32.whl", hash = "sha256:8e403a337749ed40af60e537cc4d4c03febddcc56cd26e774c9b1b600a70d3e4"},
     {file = "scipy-1.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:a5193a098ae9f29af283dcf0041f762601faf2e595c0db1da929875b7570353f"},
     {file = "scipy-1.6.1.tar.gz", hash = "sha256:c4fceb864890b6168e79b0e714c585dbe2fd4222768ee90bc1aa0f8218691b11"},
+]
+setuptools = [
+    {file = "setuptools-65.4.1-py3-none-any.whl", hash = "sha256:1b6bdc6161661409c5f21508763dc63ab20a9ac2f8ba20029aaaa7fdb9118012"},
+    {file = "setuptools-65.4.1.tar.gz", hash = "sha256:3050e338e5871e70c72983072fe34f6032ae1cdeeeb67338199c2f74e083a80e"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
